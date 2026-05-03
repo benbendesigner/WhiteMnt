@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Machine {
+  id              Int           @id @default(autoincrement())
+  title           String
+  slug            String        @unique
+  manufacturer    String
+  category        String
+  model           String?
+  serialNumber    String?
+  condition       Condition     @default(USED)
+  quantity        Int           @default(1)
+  description     String
+  price           Decimal?      @db.Decimal(10, 2)
+  callForPrice    Boolean       @default(false)
+  status          ListingStatus @default(DRAFT)
+  specs           Json?
+  images          Json?         // [{cloudinaryId, altText, sortOrder}]
+  dateListed      DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  soldAt          DateTime?
+  contactEmail    String?
+  contactPhone    String?
+  contactNote     String?
+  metaDescription String?
+
+  @@index([status, dateListed])
+}
+
+model ContactInquiry {
+  id          Int      @id @default(autoincrement())
+  machineId   Int?
+  machineName String?
+  name        String
+  email       String
+  phone       String?
+  message     String
+  createdAt   DateTime @default(now())
+  read        Boolean  @default(false)
+}
+
+model NewsletterSubscriber {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+  active       Boolean  @default(true)
+}
+
+enum Condition {
+  NEW
+  USED
+  REFURBISHED
+  PARTS_ONLY
+}
+
+enum ListingStatus {
+  DRAFT
+  ACTIVE
+  PENDING
+  SOLD
+}
