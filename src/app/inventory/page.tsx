@@ -8,6 +8,8 @@ import type { FilterParams } from "@/types";
 import { Prisma } from "@/generated/prisma/client";
 import { SITE_NAME } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Inventory",
   description: `Browse all available used wire processing equipment at ${SITE_NAME}.`,
