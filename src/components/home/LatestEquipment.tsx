@@ -14,6 +14,7 @@ async function getLatestMachines() {
 
   return machines.map((m) => ({
     ...m,
+    price: m.price !== null ? Number(m.price) : null,
     images: Array.isArray(m.images)
       ? (m.images as MachineImage[])
       : [],
