@@ -107,7 +107,7 @@ export default async function MachinePage({
           {/* ── Right: all content + form ── */}
           <div className="flex flex-col gap-8">
 
-            {/* Title, price, meta */}
+            {/* Title + price */}
             <div>
               <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
                 <h1 className="flex-1 text-2xl font-black leading-tight tracking-tight text-foreground sm:text-3xl">
@@ -120,46 +120,42 @@ export default async function MachinePage({
                 callForPrice={machine.callForPrice}
                 className="mt-2 text-2xl font-black"
               />
-              <p className="mt-2 text-sm text-muted-foreground">
-                {machine.manufacturer} · {machine.category}
-                {machine.model ? ` · ${machine.model}` : ""}
-                {machine.serialNumber ? ` · S/N ${machine.serialNumber}` : ""}
-              </p>
             </div>
 
-            {/* Listing details */}
+            {/* Listing details info card */}
             <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Listing details</p>
-              <div className="space-y-1 text-muted-foreground">
-                <p>
-                  <span className="font-medium text-foreground">Condition:</span>{" "}
-                  {formatCondition(machine.condition)}
-                </p>
-                {machine.quantity > 1 && (
-                  <p>
-                    <span className="font-medium text-foreground">Quantity:</span>{" "}
-                    {machine.quantity} available
-                  </p>
-                )}
-                <p>
-                  <span className="font-medium text-foreground">Listed:</span>{" "}
-                  {new Date(machine.dateListed).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-              <div className="mt-2 flex gap-4 border-t border-border pt-2 text-xs">
-                <a href={`tel:${contactPhone}`} className="text-primary hover:underline">
-                  {contactPhone}
-                </a>
-                <a href={`mailto:${contactEmail}`} className="text-primary hover:underline">
-                  {contactEmail}
-                </a>
-              </div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Listing details
+              </p>
+              <dl className="divide-y divide-border">
+                {[
+                  { label: "Manufacturer", value: machine.manufacturer },
+                  { label: "Category", value: machine.category },
+                  machine.model ? { label: "Model", value: machine.model } : null,
+                  machine.serialNumber ? { label: "Serial number", value: machine.serialNumber } : null,
+                  { label: "Condition", value: formatCondition(machine.condition) },
+                  machine.quantity > 1 ? { label: "Quantity", value: `${machine.quantity} available` } : null,
+                  {
+                    label: "Listed",
+                    value: new Date(machine.dateListed).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }),
+                  },
+                ]
+                  .filter(Boolean)
+                  .map((row) => (
+                    <div key={row!.label} className="flex items-baseline justify-between gap-4 py-2">
+                      <dt className="shrink-0 text-xs text-muted-foreground">{row!.label}</dt>
+                      <dd className="text-right text-sm font-medium text-foreground">{row!.value}</dd>
+                    </div>
+                  ))}
+              </dl>
               {machine.contactNote && (
-                <p className="mt-1 text-xs italic text-muted-foreground">{machine.contactNote}</p>
+                <p className="mt-2 border-t border-border pt-2 text-xs italic text-muted-foreground">
+                  {machine.contactNote}
+                </p>
               )}
             </div>
 
@@ -172,15 +168,22 @@ export default async function MachinePage({
             )}
 
             {/* Description */}
-            <div>
-              <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Description</h2>
-              <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-line">
-                {machine.description}
-              </p>
-            </div>
+            {machine.description && (
+              <div>
+                <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Description</h2>
+                <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-line">
+                  {machine.description}
+                </p>
+              </div>
+            )}
 
             {/* Contact form */}
-            <ContactCTA machineId={machine.id} machineName={machine.title} />
+            <ContactCTA
+              machineId={machine.id}
+              machineName={machine.title}
+              contactPhone={contactPhone}
+              contactEmail={contactEmail}
+            />
           </div>
         </div>
       </div>
