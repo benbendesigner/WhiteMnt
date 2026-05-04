@@ -107,13 +107,13 @@ export default async function MachinePage({
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] xl:grid-cols-[55%_1fr]">
-          {/* ── Left: sticky image gallery ── */}
-          <div className="lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto lg:pr-1">
+          {/* ── Left: images, scrolls with page ── */}
+          <div>
             <ImageGallery images={images} />
           </div>
 
-          {/* ── Right: all content + form ── */}
-          <div className="flex flex-col gap-8">
+          {/* ── Right: sticky panel ── */}
+          <div className="flex flex-col gap-8 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
 
             {/* Title + price */}
             <div>
