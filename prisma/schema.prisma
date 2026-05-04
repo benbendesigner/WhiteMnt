@@ -26,6 +26,9 @@ model Machine {
   dateListed      DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   soldAt          DateTime?
+  soldTo          String?
+  salePrice       Decimal?      @db.Decimal(10, 2)
+  soldNotes       String?
   contactEmail    String?
   contactPhone    String?
   contactNote     String?

@@ -112,11 +112,59 @@ export async function updateMachineStatus(id: number, status: ListingStatus) {
 
   const machine = await prisma.machine.update({
     where: { id },
-    data: { status, soldAt: status === "SOLD" ? new Date() : undefined },
+    data: { status },
   });
 
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${machine.slug}`);
+}
+
+const saleSchema = z.object({
+  soldTo: z.string().min(1, "Buyer name is required"),
+  soldEmail: z.string().email("Valid email required").optional().or(z.literal("")),
+  salePrice: z.preprocess(
+    (v) => (v === "" || v === null ? null : Number(v)),
+    z.number().positive().nullable()
+  ),
+  soldNotes: z.string().optional(),
+});
+
+export type SaleFormState = {
+  success: boolean;
+  errors?: Record<string, string[]>;
+  message?: string;
+};
+
+export async function recordSale(
+  id: number,
+  _prev: SaleFormState,
+  formData: FormData
+): Promise<SaleFormState> {
+  await requireAdmin();
+
+  const parsed = saleSchema.safeParse(Object.fromEntries(formData.entries()));
+  if (!parsed.success) {
+    return { success: false, errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const { soldTo, salePrice, soldNotes } = parsed.data;
+
+  const machine = await prisma.machine.update({
+    where: { id },
+    data: {
+      status: "SOLD",
+      soldAt: new Date(),
+      soldTo,
+      salePrice,
+      soldNotes: soldNotes || null,
+    },
+  });
+
+  revalidatePath("/inventory");
+  revalidatePath(`/inventory/${machine.slug}`);
+  revalidatePath("/admin");
+
+  return { success: true };
 }
 
 export async function deleteMachine(id: number) {

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition, useState, useMemo } from "react";
-import { updateMachineStatus, deleteMachine } from "@/actions/machines";
+import { useTransition, useState, useMemo, useActionState } from "react";
+import { updateMachineStatus, deleteMachine, recordSale, type SaleFormState } from "@/actions/machines";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import type { Machine, ListingStatus } from "@/generated/prisma/client";
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon } from "lucide-react";
@@ -17,15 +19,115 @@ interface Props {
   inquiryMap: Record<number, number>;
 }
 
+const STATUS_DOT: Record<ListingStatus, string> = {
+  ACTIVE:  "bg-green-500",
+  PENDING: "bg-amber-400",
+  SOLD:    "bg-red-500",
+  DRAFT:   "bg-sky-400",
+};
+
+const STATUS_LABEL: Record<ListingStatus, string> = {
+  ACTIVE:  "Active",
+  PENDING: "Pending",
+  SOLD:    "Sold",
+  DRAFT:   "Draft",
+};
+
+const saleInitial: SaleFormState = { success: false };
+
+function SaleDialog({
+  machine,
+  open,
+  onClose,
+}: {
+  machine: Machine | null;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const boundAction = machine
+    ? recordSale.bind(null, machine.id)
+    : async (_prev: SaleFormState, _fd: FormData) => saleInitial;
+
+  const [state, formAction, pending] = useActionState(boundAction, saleInitial);
+
+  if (state.success) {
+    onClose();
+    return null;
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent showCloseButton>
+        <DialogHeader>
+          <DialogTitle>Record sale</DialogTitle>
+          {machine && (
+            <p className="text-sm text-muted-foreground">{machine.title}</p>
+          )}
+        </DialogHeader>
+
+        <form action={formAction} className="space-y-3 px-4 pb-2">
+          <Input
+            label="Buyer name / company *"
+            id="soldTo"
+            name="soldTo"
+            required
+            placeholder="Acme Corp"
+            error={state.errors?.soldTo?.[0]}
+          />
+          <Input
+            label="Buyer email"
+            id="soldEmail"
+            name="soldEmail"
+            type="email"
+            placeholder="buyer@example.com"
+            error={state.errors?.soldEmail?.[0]}
+          />
+          <Input
+            label="Sale price (USD)"
+            id="salePrice"
+            name="salePrice"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder={machine?.price ? String(Number(machine.price)) : "e.g. 8500"}
+            error={state.errors?.salePrice?.[0]}
+          />
+          <Textarea
+            label="Notes"
+            id="soldNotes"
+            name="soldNotes"
+            rows={3}
+            placeholder="Any notes about the sale…"
+          />
+
+          <DialogFooter className="pt-2">
+            <Button type="button" variant="outline" size="sm" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" size="sm" disabled={pending}>
+              {pending ? "Saving…" : "Mark as sold"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function ListingsTable({ machines, inquiryMap }: Props) {
   const [, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+  const [saleTarget, setSaleTarget] = useState<Machine | null>(null);
   const [q, setQ] = useState("");
   const [sortCol, setSortCol] = useState<SortCol>("dateListed");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
 
-  function handleStatus(id: number, status: ListingStatus) {
-    startTransition(() => updateMachineStatus(id, status));
+  function handleStatusChange(machine: Machine, status: ListingStatus) {
+    if (status === "SOLD") {
+      setSaleTarget(machine);
+      return;
+    }
+    startTransition(() => updateMachineStatus(machine.id, status));
   }
 
   function handleDelete(id: number) {
@@ -36,12 +138,8 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
   }
 
   function toggleSort(col: SortCol) {
-    if (sortCol === col) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortCol(col);
-      setSortDir("asc");
-    }
+    if (sortCol === col) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortCol(col); setSortDir("asc"); }
   }
 
   const filtered = useMemo(() => {
@@ -61,13 +159,13 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
     return [...filtered].sort((a, b) => {
       let cmp = 0;
       switch (sortCol) {
-        case "title":       cmp = a.title.localeCompare(b.title); break;
-        case "manufacturer":cmp = a.manufacturer.localeCompare(b.manufacturer); break;
-        case "category":    cmp = a.category.localeCompare(b.category); break;
-        case "price":       cmp = (Number(a.price) || 0) - (Number(b.price) || 0); break;
-        case "status":      cmp = a.status.localeCompare(b.status); break;
-        case "dateListed":  cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
-        case "inquiries":   cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
+        case "title":        cmp = a.title.localeCompare(b.title); break;
+        case "manufacturer": cmp = a.manufacturer.localeCompare(b.manufacturer); break;
+        case "category":     cmp = a.category.localeCompare(b.category); break;
+        case "price":        cmp = (Number(a.price) || 0) - (Number(b.price) || 0); break;
+        case "status":       cmp = a.status.localeCompare(b.status); break;
+        case "dateListed":   cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
+        case "inquiries":    cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -86,8 +184,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
         className={cn("cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-xs text-muted-foreground hover:text-foreground", className)}
         onClick={() => toggleSort(col)}
       >
-        {label}
-        <SortIcon col={col} />
+        {label}<SortIcon col={col} />
       </th>
     );
   }
@@ -105,7 +202,6 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
 
   return (
     <>
-      {/* Search */}
       <div className="mb-3">
         <input
           type="search"
@@ -142,7 +238,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               return (
                 <tr key={m.id} className="transition-colors hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium text-foreground">
-                    <span className="line-clamp-1 max-w-[180px] block">{m.title}</span>
+                    <span className="line-clamp-1 block max-w-[180px]">{m.title}</span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{m.manufacturer}</td>
                   <td className="px-4 py-3 text-muted-foreground">{m.category}</td>
@@ -151,16 +247,18 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
                   <td className="px-4 py-3">
-                    <select
-                      value={m.status}
-                      onChange={(e) => handleStatus(m.id, e.target.value as ListingStatus)}
-                      className="rounded border border-input bg-transparent px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                    >
-                      <option value="DRAFT">Draft</option>
-                      <option value="ACTIVE">Active</option>
-                      <option value="PENDING">Pending</option>
-                      <option value="SOLD">Sold</option>
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <span className={cn("size-2 rounded-full shrink-0", STATUS_DOT[m.status])} />
+                      <select
+                        value={m.status}
+                        onChange={(e) => handleStatusChange(m, e.target.value as ListingStatus)}
+                        className="rounded border border-input bg-transparent px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                      >
+                        {(Object.keys(STATUS_LABEL) as ListingStatus[]).map((s) => (
+                          <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+                        ))}
+                      </select>
+                    </div>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                     {new Date(m.dateListed).toLocaleDateString()}
@@ -203,6 +301,14 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
         </table>
       </div>
 
+      {/* Sale modal */}
+      <SaleDialog
+        machine={saleTarget}
+        open={saleTarget !== null}
+        onClose={() => setSaleTarget(null)}
+      />
+
+      {/* Delete confirm */}
       <Dialog open={confirmDelete !== null} onOpenChange={(open) => !open && setConfirmDelete(null)}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
