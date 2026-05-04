@@ -7,6 +7,7 @@ import SpecsTable from "@/components/inventory/SpecsTable";
 import PriceDisplay from "@/components/inventory/PriceDisplay";
 import StatusBadge from "@/components/inventory/StatusBadge";
 import ContactCTA from "@/components/inventory/ContactCTA";
+import CopyLinkButton from "@/components/inventory/CopyLinkButton";
 import { SITE_NAME, CONTACT_PHONE, CONTACT_EMAIL } from "@/lib/constants";
 import { formatCondition } from "@/lib/format";
 import type { MachineImage } from "@/types";
@@ -91,12 +92,19 @@ export default async function MachinePage({
       />
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <nav className="mb-6 text-sm text-muted-foreground">
-          <Link href="/inventory" className="transition-colors hover:text-primary">
-            Inventory
-          </Link>{" "}
-          &rsaquo; {machine.title}
-        </nav>
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <nav className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+            <Link
+              href="/inventory"
+              className="shrink-0 underline-offset-2 transition-colors hover:text-foreground hover:underline"
+            >
+              Inventory
+            </Link>
+            <span className="opacity-40">/</span>
+            <span className="truncate text-foreground">{machine.title}</span>
+          </nav>
+          <CopyLinkButton />
+        </div>
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] xl:grid-cols-[55%_1fr]">
           {/* ── Left: sticky image gallery ── */}
@@ -115,11 +123,13 @@ export default async function MachinePage({
                 </h1>
                 <StatusBadge status={machine.status} />
               </div>
-              <PriceDisplay
-                price={machine.price}
-                callForPrice={machine.callForPrice}
-                className="mt-2 text-2xl font-black"
-              />
+              {!machine.callForPrice && (
+                <PriceDisplay
+                  price={machine.price}
+                  callForPrice={false}
+                  className="mt-2 text-2xl font-black"
+                />
+              )}
             </div>
 
             {/* Listing details info card */}
@@ -129,6 +139,11 @@ export default async function MachinePage({
               </p>
               <dl className="divide-y divide-border">
                 {[
+                  machine.callForPrice
+                    ? { label: "Price", value: "Contact for price" }
+                    : machine.price
+                    ? { label: "Price", value: `$${Number(machine.price).toLocaleString("en-US")}` }
+                    : null,
                   { label: "Manufacturer", value: machine.manufacturer },
                   { label: "Category", value: machine.category },
                   machine.model ? { label: "Model", value: machine.model } : null,
