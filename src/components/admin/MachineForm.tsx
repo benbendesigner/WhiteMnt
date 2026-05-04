@@ -58,6 +58,24 @@ export default function MachineForm({ machine, suggestions }: Props) {
     Object.fromEntries(specRows.filter((r) => r.key).map((r) => [r.key, r.value]))
   );
 
+  // Derived filtered lists based on current manufacturer
+  const filteredCategories = manufacturer
+    ? (suggestions.categoriesByManufacturer[manufacturer] ?? suggestions.categories)
+    : suggestions.categories;
+
+  const filteredModels = manufacturer
+    ? (suggestions.modelsByManufacturer[manufacturer] ?? suggestions.models)
+    : suggestions.models;
+
+  function handleManufacturerChange(value: string) {
+    setManufacturer(value);
+    // Clear category/model if they're no longer valid for this manufacturer
+    const validCats = value ? (suggestions.categoriesByManufacturer[value] ?? []) : suggestions.categories;
+    if (value && category && !validCats.includes(category)) setCategory("");
+    const validModels = value ? (suggestions.modelsByManufacturer[value] ?? []) : suggestions.models;
+    if (value && model && !validModels.includes(model)) setModel("");
+  }
+
   // Auto-apply spec preset when category changes
   function handleCategoryChange(value: string) {
     setCategory(value);
@@ -108,15 +126,15 @@ export default function MachineForm({ machine, suggestions }: Props) {
       <input type="hidden" name="specs" value={specsJson} />
       <input type="hidden" name="images" value={JSON.stringify(images)} />
 
-      {/* Datalists for autocomplete */}
+      {/* Datalists — category and model filter based on selected manufacturer */}
       <datalist id={mfgListId}>
         {suggestions.manufacturers.map((m) => <option key={m} value={m} />)}
       </datalist>
       <datalist id={catListId}>
-        {suggestions.categories.map((c) => <option key={c} value={c} />)}
+        {filteredCategories.map((c) => <option key={c} value={c} />)}
       </datalist>
       <datalist id={modelListId}>
-        {suggestions.models.map((m) => <option key={m} value={m} />)}
+        {filteredModels.map((m) => <option key={m} value={m} />)}
       </datalist>
 
       {/* ── Basic Info ─────────────────────────────────────── */}
@@ -141,7 +159,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
             name="manufacturer"
             required
             value={manufacturer}
-            onChange={(e) => setManufacturer((e.target as HTMLInputElement).value)}
+            onChange={(e) => handleManufacturerChange((e.target as HTMLInputElement).value)}
             placeholder="e.g. Komax"
             list={mfgListId}
             error={state.errors?.manufacturer?.[0]}
