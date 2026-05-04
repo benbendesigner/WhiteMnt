@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import LoadMoreGrid from "@/components/inventory/LoadMoreGrid";
 import SearchAndFilter from "@/components/inventory/SearchAndFilter";
+import MobileFilterBar from "@/components/inventory/MobileFilterBar";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
 import type { FilterParams } from "@/types";
 import { Prisma } from "@/generated/prisma/client";
@@ -134,7 +135,7 @@ export default async function InventoryPage({
         </p>
 
         <div className="mt-8 flex flex-col gap-8 lg:flex-row">
-          <aside className="w-full lg:w-64 lg:flex-shrink-0">
+          <aside className="hidden w-full lg:block lg:w-64 lg:flex-shrink-0">
             <Suspense fallback={null}>
               <SearchAndFilter
                 categories={categories}
@@ -146,13 +147,22 @@ export default async function InventoryPage({
             </Suspense>
           </aside>
 
-          <div className="flex-1">
+          <div className="flex-1 pb-24 lg:pb-0">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Latest
             </p>
             <LoadMoreGrid machines={machinesWithImages} initialCount={INITIAL_COUNT} />
           </div>
         </div>
+
+        <Suspense fallback={null}>
+          <MobileFilterBar
+            categories={categories}
+            manufacturers={manufacturers}
+            categoryCounts={categoryCounts}
+            manufacturerCounts={manufacturerCounts}
+          />
+        </Suspense>
       </div>
 
       <NewsletterSignup />
