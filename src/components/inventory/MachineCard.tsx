@@ -17,7 +17,7 @@ function formatDate(d: Date | string) {
 
 function PriceLine({ price, callForPrice }: { price: MachineCardData["price"]; callForPrice: boolean }) {
   if (callForPrice || price === null) {
-    return <span className="text-xs text-primary font-medium">Contact for price</span>;
+    return <span className="text-xs text-primary font-medium">Contact For Price</span>;
   }
   return (
     <span className="text-xs font-semibold text-foreground">

@@ -108,7 +108,7 @@ export default async function MachinePage({
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] xl:grid-cols-[55%_1fr]">
           {/* ── Left: sticky image gallery ── */}
-          <div className="lg:sticky lg:top-20 lg:self-start">
+          <div className="lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto lg:pr-1">
             <ImageGallery images={images} />
           </div>
 
@@ -137,7 +137,7 @@ export default async function MachinePage({
               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Listing details
               </p>
-              <dl className="divide-y divide-border">
+              <dl className="divide-y divide-dashed divide-border">
                 {[
                   machine.callForPrice
                     ? { label: "Price", value: "Contact for price" }
