@@ -1,8 +1,7 @@
 "use client";
 
-import { useActionState, useState, useTransition, useId } from "react";
+import { useActionState, useState, useId } from "react";
 import { createMachine, updateMachine, type MachineFormState } from "@/actions/machines";
-import { draftDescription } from "@/actions/ai";
 import ImageUploader, { type UploadedImage } from "./ImageUploader";
 import SpecsEditor from "./SpecsEditor";
 import { Input } from "@/components/ui/Input";
@@ -12,7 +11,6 @@ import { Button } from "@/components/ui/Button";
 import type { Machine } from "@/generated/prisma/client";
 import type { MachineImage } from "@/types";
 import type { FormSuggestions } from "@/actions/suggestions";
-import { SparklesIcon, Loader2Icon } from "lucide-react";
 import { SPEC_PRESETS } from "@/lib/constants";
 
 interface Props {
@@ -88,22 +86,6 @@ export default function MachineForm({ machine, suggestions }: Props) {
       .filter((p) => !existingKeys.has(p.key))
       .map((p) => ({ key: p.key, value: "" }));
     if (toAdd.length > 0) setSpecRows((prev) => [...prev, ...toAdd]);
-  }
-
-  // AI description drafting
-  const [aiPending, startAiTransition] = useTransition();
-  const [aiError, setAiError] = useState<string | null>(null);
-
-  function handleDraftDescription() {
-    setAiError(null);
-    startAiTransition(async () => {
-      const result = await draftDescription(title, manufacturer, category, model, condition);
-      if (result.error) {
-        setAiError(result.error);
-      } else if (result.text) {
-        setDescription(result.text);
-      }
-    });
   }
 
   const mfgListId = useId();
@@ -219,26 +201,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
 
       {/* ── Description ────────────────────────────────────── */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-b border-border pb-2">
-          <h2 className="text-base font-semibold text-foreground">Description</h2>
-          <button
-            type="button"
-            onClick={handleDraftDescription}
-            disabled={aiPending || !title}
-            className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
-            title={!title ? "Enter a title first" : "Draft a description using AI"}
-          >
-            {aiPending ? (
-              <Loader2Icon className="size-3 animate-spin" />
-            ) : (
-              <SparklesIcon className="size-3" />
-            )}
-            {aiPending ? "Drafting..." : "Draft with AI"}
-          </button>
-        </div>
-        {aiError && (
-          <p className="text-xs text-destructive">{aiError}</p>
-        )}
+        <h2 className="border-b border-border pb-2 text-base font-semibold text-foreground">Description</h2>
         <Textarea
           label=""
           id="description"

@@ -63,7 +63,7 @@ export default function MachineCard({ machine }: { machine: MachineCardData }) {
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5 p-4">
+        <div className="flex flex-1 flex-col gap-1.5 p-4">
           <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
             {machine.title}
           </h3>
