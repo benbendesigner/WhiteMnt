@@ -11,10 +11,18 @@ import { cn } from "@/lib/utils";
 interface Props {
   categories: string[];
   manufacturers: string[];
+  categoryCounts: Record<string, number>;
+  manufacturerCounts: Record<string, number>;
   total: number;
 }
 
-export default function SearchAndFilter({ categories, manufacturers, total }: Props) {
+export default function SearchAndFilter({
+  categories,
+  manufacturers,
+  categoryCounts,
+  manufacturerCounts,
+  total,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -64,24 +72,67 @@ export default function SearchAndFilter({ categories, manufacturers, total }: Pr
 
       {categories.length > 0 && (
         <FilterGroup label="Category">
-          <RadioOption name="category" value="" checked={!category} onChange={() => update("category", "")} label="All Categories" />
-          {categories.map((c) => (
-            <RadioOption key={c} name="category" value={c} checked={category === c} onChange={() => update("category", c)} label={c} />
-          ))}
+          <RadioOption
+            name="category"
+            value=""
+            checked={!category}
+            onChange={() => update("category", "")}
+            label="All Categories"
+          />
+          {categories.map((c) => {
+            const count = categoryCounts[c] ?? 0;
+            const dimmed = !!manufacturer && count === 0;
+            return (
+              <RadioOption
+                key={c}
+                name="category"
+                value={c}
+                checked={category === c}
+                onChange={() => update("category", c)}
+                label={c}
+                count={count}
+                dimmed={dimmed}
+              />
+            );
+          })}
         </FilterGroup>
       )}
 
       {manufacturers.length > 0 && (
         <FilterGroup label="Manufacturer">
-          <RadioOption name="manufacturer" value="" checked={!manufacturer} onChange={() => update("manufacturer", "")} label="All Manufacturers" />
-          {manufacturers.map((m) => (
-            <RadioOption key={m} name="manufacturer" value={m} checked={manufacturer === m} onChange={() => update("manufacturer", m)} label={m} />
-          ))}
+          <RadioOption
+            name="manufacturer"
+            value=""
+            checked={!manufacturer}
+            onChange={() => update("manufacturer", "")}
+            label="All Manufacturers"
+          />
+          {manufacturers.map((m) => {
+            const count = manufacturerCounts[m] ?? 0;
+            const dimmed = !!category && count === 0;
+            return (
+              <RadioOption
+                key={m}
+                name="manufacturer"
+                value={m}
+                checked={manufacturer === m}
+                onChange={() => update("manufacturer", m)}
+                label={m}
+                count={count}
+                dimmed={dimmed}
+              />
+            );
+          })}
         </FilterGroup>
       )}
 
       {hasFilters && (
-        <Button variant="ghost" size="sm" className="w-full text-muted-foreground" onClick={() => router.push(pathname)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full text-muted-foreground"
+          onClick={() => router.push(pathname)}
+        >
           <XIcon className="mr-1 size-3.5" />
           Clear all filters
         </Button>
@@ -93,21 +144,57 @@ export default function SearchAndFilter({ categories, manufacturers, total }: Pr
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        {label}
+      </p>
       <div className="space-y-1.5">{children}</div>
     </div>
   );
 }
 
-function RadioOption({ name, value, checked, onChange, label }: {
-  name: string; value: string; checked: boolean; onChange: () => void; label: string;
+function RadioOption({
+  name,
+  value,
+  checked,
+  onChange,
+  label,
+  count,
+  dimmed = false,
+}: {
+  name: string;
+  value: string;
+  checked: boolean;
+  onChange: () => void;
+  label: string;
+  count?: number;
+  dimmed?: boolean;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-2 text-sm">
-      <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="size-3.5 accent-primary cursor-pointer" />
-      <span className={cn("transition-colors", checked ? "font-medium text-foreground" : "text-muted-foreground")}>
+    <label
+      className={cn(
+        "flex cursor-pointer items-center gap-2 text-sm transition-opacity",
+        dimmed && "pointer-events-none opacity-30"
+      )}
+    >
+      <input
+        type="radio"
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={onChange}
+        className="size-3.5 accent-primary cursor-pointer"
+      />
+      <span
+        className={cn(
+          "flex-1 transition-colors",
+          checked ? "font-medium text-foreground" : "text-muted-foreground"
+        )}
+      >
         {label}
       </span>
+      {count !== undefined && (
+        <span className="text-xs tabular-nums text-muted-foreground/60">{count}</span>
+      )}
     </label>
   );
 }

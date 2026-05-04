@@ -6,10 +6,14 @@ export type MachineImage = {
   sortOrder?: number;
 };
 
-export type MachineCardData = Pick<
-  Machine,
-  "id" | "slug" | "title" | "price" | "callForPrice" | "status" | "condition" | "dateListed" | "manufacturer" | "category"
+export type MachineCardData = Omit<
+  Pick<
+    Machine,
+    "id" | "slug" | "title" | "price" | "callForPrice" | "status" | "condition" | "dateListed" | "manufacturer" | "category" | "serialNumber"
+  >,
+  "price"
 > & {
+  price: number | null;
   images: MachineImage[];
 };
 

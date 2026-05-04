@@ -64,19 +64,62 @@ async function getFilterOptions() {
   };
 }
 
+async function getCounts(params: FilterParams) {
+  const { q, category, manufacturer } = params;
+
+  const searchWhere = q
+    ? {
+        OR: [
+          { title: { contains: q, mode: "insensitive" as const } },
+          { description: { contains: q, mode: "insensitive" as const } },
+          { model: { contains: q, mode: "insensitive" as const } },
+          { manufacturer: { contains: q, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
+  const [catGroups, mfgGroups] = await Promise.all([
+    prisma.machine.groupBy({
+      by: ["category"],
+      where: {
+        status: { in: ["ACTIVE", "PENDING"] },
+        ...searchWhere,
+        ...(manufacturer && { manufacturer: { equals: manufacturer, mode: "insensitive" } }),
+      },
+      _count: { _all: true },
+    }),
+    prisma.machine.groupBy({
+      by: ["manufacturer"],
+      where: {
+        status: { in: ["ACTIVE", "PENDING"] },
+        ...searchWhere,
+        ...(category && { category: { equals: category, mode: "insensitive" } }),
+      },
+      _count: { _all: true },
+    }),
+  ]);
+
+  return {
+    categoryCounts: Object.fromEntries(catGroups.map((g) => [g.category, g._count._all])),
+    manufacturerCounts: Object.fromEntries(mfgGroups.map((g) => [g.manufacturer, g._count._all])),
+  };
+}
+
 export default async function InventoryPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
-  const [{ machines, total }, { categories, manufacturers }] = await Promise.all([
+  const [{ machines, total }, { categories, manufacturers }, { categoryCounts, manufacturerCounts }] = await Promise.all([
     getInventory(params),
     getFilterOptions(),
+    getCounts(params),
   ]);
 
   const machinesWithImages = machines.map((m) => ({
     ...m,
+    price: m.price !== null ? Number(m.price) : null,
     images: Array.isArray(m.images) ? (m.images as { cloudinaryId: string; altText?: string; sortOrder?: number }[]) : [],
   }));
 
@@ -96,12 +139,17 @@ export default async function InventoryPage({
               <SearchAndFilter
                 categories={categories}
                 manufacturers={manufacturers}
+                categoryCounts={categoryCounts}
+                manufacturerCounts={manufacturerCounts}
                 total={total}
               />
             </Suspense>
           </aside>
 
           <div className="flex-1">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Latest
+            </p>
             <LoadMoreGrid machines={machinesWithImages} initialCount={INITIAL_COUNT} />
           </div>
         </div>

@@ -99,7 +99,7 @@ async function main() {
   // In-memory accumulator so multiple files for the same listing stack correctly
   type ImageEntry = { cloudinaryId: string; altText: string; sortOrder: number };
   const accumulated = new Map<string, ImageEntry[]>(
-    machines.map((m) => [m.id, (m.images as ImageEntry[]) ?? []])
+    machines.map((m) => [String(m.id), (m.images as ImageEntry[]) ?? []])
   );
 
   const files = fs
@@ -138,7 +138,7 @@ async function main() {
 
     try {
       // Read from the in-memory accumulator, not the stale initial fetch
-      const current = accumulated.get(machine.id) ?? [];
+      const current = accumulated.get(String(machine.id)) ?? [];
 
       const upload = await cloudinary.uploader.upload(filepath, {
         folder: "machines",
@@ -156,7 +156,7 @@ async function main() {
       ];
 
       // Update both the DB and the in-memory accumulator
-      accumulated.set(machine.id, updatedImages);
+      accumulated.set(String(machine.id), updatedImages);
       await prisma.machine.update({
         where: { id: machine.id },
         data: { images: updatedImages },
