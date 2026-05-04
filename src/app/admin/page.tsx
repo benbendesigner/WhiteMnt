@@ -6,7 +6,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PlusIcon } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const machines = await prisma.machine.findMany({ orderBy: { dateListed: "desc" } });
+  const [machines, inquiryGroups] = await Promise.all([
+    prisma.machine.findMany({ orderBy: { dateListed: "desc" } }),
+    prisma.contactInquiry.groupBy({ by: ["machineId"], _count: { _all: true } }),
+  ]);
+
+  const inquiryMap: Record<number, number> = {};
+  for (const g of inquiryGroups) {
+    if (g.machineId !== null) inquiryMap[g.machineId] = g._count._all;
+  }
 
   const stats = {
     total: machines.length,
@@ -44,7 +52,7 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="mt-6">
-        <ListingsTable machines={machines} />
+        <ListingsTable machines={machines} inquiryMap={inquiryMap} />
       </div>
     </div>
   );

@@ -1,15 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition, useState } from "react";
+import { useTransition, useState, useMemo } from "react";
 import { updateMachineStatus, deleteMachine } from "@/actions/machines";
 import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import type { Machine, ListingStatus } from "@/generated/prisma/client";
+import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function ListingsTable({ machines }: { machines: Machine[] }) {
+type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries";
+type SortDir = "asc" | "desc";
+
+interface Props {
+  machines: Machine[];
+  inquiryMap: Record<number, number>;
+}
+
+export default function ListingsTable({ machines, inquiryMap }: Props) {
   const [, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+  const [q, setQ] = useState("");
+  const [sortCol, setSortCol] = useState<SortCol>("dateListed");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
 
   function handleStatus(id: number, status: ListingStatus) {
     startTransition(() => updateMachineStatus(id, status));
@@ -20,6 +33,63 @@ export default function ListingsTable({ machines }: { machines: Machine[] }) {
       deleteMachine(id);
       setConfirmDelete(null);
     });
+  }
+
+  function toggleSort(col: SortCol) {
+    if (sortCol === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortCol(col);
+      setSortDir("asc");
+    }
+  }
+
+  const filtered = useMemo(() => {
+    const lower = q.toLowerCase();
+    return machines.filter(
+      (m) =>
+        !lower ||
+        m.title.toLowerCase().includes(lower) ||
+        m.manufacturer.toLowerCase().includes(lower) ||
+        m.category.toLowerCase().includes(lower) ||
+        (m.model ?? "").toLowerCase().includes(lower) ||
+        (m.serialNumber ?? "").toLowerCase().includes(lower)
+    );
+  }, [machines, q]);
+
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      let cmp = 0;
+      switch (sortCol) {
+        case "title":       cmp = a.title.localeCompare(b.title); break;
+        case "manufacturer":cmp = a.manufacturer.localeCompare(b.manufacturer); break;
+        case "category":    cmp = a.category.localeCompare(b.category); break;
+        case "price":       cmp = (Number(a.price) || 0) - (Number(b.price) || 0); break;
+        case "status":      cmp = a.status.localeCompare(b.status); break;
+        case "dateListed":  cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
+        case "inquiries":   cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }, [filtered, sortCol, sortDir, inquiryMap]);
+
+  function SortIcon({ col }: { col: SortCol }) {
+    if (sortCol !== col) return <ChevronsUpDownIcon className="ml-1 inline size-3 opacity-40" />;
+    return sortDir === "asc"
+      ? <ChevronUpIcon className="ml-1 inline size-3 text-primary" />
+      : <ChevronDownIcon className="ml-1 inline size-3 text-primary" />;
+  }
+
+  function Th({ col, label, className }: { col: SortCol; label: string; className?: string }) {
+    return (
+      <th
+        className={cn("cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-xs text-muted-foreground hover:text-foreground", className)}
+        onClick={() => toggleSort(col)}
+      >
+        {label}
+        <SortIcon col={col} />
+      </th>
+    );
   }
 
   if (machines.length === 0) {
@@ -35,69 +105,100 @@ export default function ListingsTable({ machines }: { machines: Machine[] }) {
 
   return (
     <>
+      {/* Search */}
+      <div className="mb-3">
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search by title, manufacturer, category, model, S/N…"
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:max-w-sm"
+        />
+        {q && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            {sorted.length} of {machines.length} listings
+          </p>
+        )}
+      </div>
+
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full text-sm">
-          <thead className="bg-muted/50 text-xs text-muted-foreground">
+          <thead className="bg-muted/50">
             <tr>
-              <th className="px-4 py-3 text-left">Title</th>
-              <th className="px-4 py-3 text-left">Manufacturer</th>
-              <th className="px-4 py-3 text-left">Category</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Qty</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Listed</th>
-              <th className="px-4 py-3 text-right">Actions</th>
+              <Th col="title" label="Title" />
+              <Th col="manufacturer" label="Manufacturer" />
+              <Th col="category" label="Category" />
+              <Th col="price" label="Price" />
+              <th className="px-4 py-3 text-left text-xs text-muted-foreground">Qty</th>
+              <Th col="status" label="Status" />
+              <Th col="dateListed" label="Listed" />
+              <Th col="inquiries" label="Inquiries" className="text-center" />
+              <th className="px-4 py-3 text-right text-xs text-muted-foreground">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {machines.map((m) => (
-              <tr key={m.id} className="transition-colors hover:bg-muted/30">
-                <td className="max-w-[200px] truncate px-4 py-3 font-medium text-foreground">
-                  {m.title}
-                </td>
-                <td className="px-4 py-3 text-muted-foreground">{m.manufacturer}</td>
-                <td className="px-4 py-3 text-muted-foreground">{m.category}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  {m.callForPrice ? "Call" : m.price ? `$${Number(m.price).toLocaleString()}` : "—"}
-                </td>
-                <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
-                <td className="px-4 py-3">
-                  <select
-                    value={m.status}
-                    onChange={(e) => handleStatus(m.id, e.target.value as ListingStatus)}
-                    className="rounded border border-input bg-transparent px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                  >
-                    <option value="DRAFT">Draft</option>
-                    <option value="ACTIVE">Active</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="SOLD">Sold</option>
-                  </select>
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                  {new Date(m.dateListed).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="xs" render={<Link href={`/admin/machines/${m.id}`} />}>
-                      Edit
-                    </Button>
-                    {m.status === "ACTIVE" && (
-                      <Button variant="ghost" size="xs" render={<Link href={`/inventory/${m.slug}`} target="_blank" />}>
-                        View
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                      onClick={() => setConfirmDelete(m.id)}
+            {sorted.map((m) => {
+              const inquiries = inquiryMap[m.id] ?? 0;
+              return (
+                <tr key={m.id} className="transition-colors hover:bg-muted/30">
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    <span className="line-clamp-1 max-w-[180px] block">{m.title}</span>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.manufacturer}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.category}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {m.callForPrice ? "Contact" : m.price ? `$${Number(m.price).toLocaleString()}` : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
+                  <td className="px-4 py-3">
+                    <select
+                      value={m.status}
+                      onChange={(e) => handleStatus(m.id, e.target.value as ListingStatus)}
+                      className="rounded border border-input bg-transparent px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
                     >
-                      Delete
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      <option value="DRAFT">Draft</option>
+                      <option value="ACTIVE">Active</option>
+                      <option value="PENDING">Pending</option>
+                      <option value="SOLD">Sold</option>
+                    </select>
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                    {new Date(m.dateListed).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {inquiries > 0 && (
+                      <Link
+                        href="/admin/inquiries"
+                        className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary hover:bg-primary/20"
+                      >
+                        <MessageSquareIcon className="size-3" />
+                        {inquiries}
+                      </Link>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex justify-end gap-1">
+                      {m.status === "ACTIVE" && (
+                        <Button variant="ghost" size="xs" render={<Link href={`/inventory/${m.slug}`} target="_blank" />}>
+                          View
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="xs" render={<Link href={`/admin/machines/${m.id}`} />}>
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="xs"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => setConfirmDelete(m.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
