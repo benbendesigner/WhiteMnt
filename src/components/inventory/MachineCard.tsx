@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cloudinaryUrl } from "@/lib/cloudinary";
-import { Card } from "@/components/ui/card";
 import PriceDisplay from "./PriceDisplay";
 import StatusBadge from "./StatusBadge";
 import type { MachineCardData } from "@/types";
@@ -14,7 +13,7 @@ export default function MachineCard({ machine }: { machine: MachineCardData }) {
 
   return (
     <Link href={`/inventory/${machine.slug}`} className="group block">
-      <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
+      <div className="flex h-full flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 transition-shadow group-hover:shadow-md">
         <div className="relative aspect-video bg-muted">
           {imgUrl ? (
             <Image
@@ -49,7 +48,7 @@ export default function MachineCard({ machine }: { machine: MachineCardData }) {
             <PriceDisplay price={machine.price} callForPrice={machine.callForPrice} />
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }

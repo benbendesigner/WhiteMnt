@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import MachineGrid from "@/components/inventory/MachineGrid";
+import LoadMoreGrid from "@/components/inventory/LoadMoreGrid";
 import SearchAndFilter from "@/components/inventory/SearchAndFilter";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
 import type { FilterParams } from "@/types";
@@ -15,11 +15,10 @@ export const metadata: Metadata = {
   description: `Browse all available used wire processing equipment at ${SITE_NAME}.`,
 };
 
-const PAGE_SIZE = 24;
+const INITIAL_COUNT = 24;
 
 async function getInventory(params: FilterParams) {
-  const { q, category, manufacturer, sort = "newest", page = "1" } = params;
-  const skip = (parseInt(page) - 1) * PAGE_SIZE;
+  const { q, category, manufacturer, sort = "newest" } = params;
 
   const where: Prisma.MachineWhereInput = {
     status: { in: ["ACTIVE", "PENDING"] },
@@ -41,12 +40,9 @@ async function getInventory(params: FilterParams) {
     : sort === "price_desc" ? { price: "desc" }
     : { dateListed: "desc" };
 
-  const [machines, total] = await Promise.all([
-    prisma.machine.findMany({ where, orderBy, skip, take: PAGE_SIZE }),
-    prisma.machine.count({ where }),
-  ]);
+  const machines = await prisma.machine.findMany({ where, orderBy });
 
-  return { machines, total };
+  return { machines, total: machines.length };
 }
 
 async function getFilterOptions() {
@@ -106,7 +102,7 @@ export default async function InventoryPage({
           </aside>
 
           <div className="flex-1">
-            <MachineGrid machines={machinesWithImages} />
+            <LoadMoreGrid machines={machinesWithImages} initialCount={INITIAL_COUNT} />
           </div>
         </div>
       </div>

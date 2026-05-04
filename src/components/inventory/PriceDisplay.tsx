@@ -7,7 +7,7 @@ interface PriceDisplayProps {
 export default function PriceDisplay({ price, callForPrice, className = "" }: PriceDisplayProps) {
   if (callForPrice || price === null) {
     return (
-      <span className={`font-semibold text-primary ${className}`}>Call for Price</span>
+      <span className={`font-semibold text-primary ${className}`}>Contact for Price</span>
     );
   }
   return (
