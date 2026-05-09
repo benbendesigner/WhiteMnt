@@ -21,24 +21,15 @@ export default function ImageUploader({ value, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
   async function uploadFile(file: File): Promise<UploadedImage | null> {
-    if (!cloudName || !uploadPreset) {
-      throw new Error("Cloudinary env vars not configured");
-    }
     const fd = new FormData();
     fd.append("file", file);
-    fd.append("upload_preset", uploadPreset);
-    fd.append("folder", "equipment");
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      { method: "POST", body: fd }
-    );
+    const res = await fetch("/api/upload", { method: "POST", body: fd });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body?.error?.message ?? `Upload failed (${res.status})`);
+      throw new Error(body?.error ?? `Upload failed (${res.status})`);
     }
     const data = await res.json();
     return { cloudinaryId: data.public_id, altText: "", sortOrder: value.length };
