@@ -52,7 +52,10 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Machine: 'Machine',
+  AdminUser: 'AdminUser',
+  AuditLog: 'AuditLog',
   ContactInquiry: 'ContactInquiry',
+  WantedItem: 'WantedItem',
   NewsletterSubscriber: 'NewsletterSubscriber'
 } as const
 
@@ -103,6 +106,33 @@ export const MachineScalarFieldEnum = {
 export type MachineScalarFieldEnum = (typeof MachineScalarFieldEnum)[keyof typeof MachineScalarFieldEnum]
 
 
+export const AdminUserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  passwordHash: 'passwordHash',
+  active: 'active',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userEmail: 'userEmail',
+  userName: 'userName',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
 export const ContactInquiryScalarFieldEnum = {
   id: 'id',
   machineId: 'machineId',
@@ -116,6 +146,20 @@ export const ContactInquiryScalarFieldEnum = {
 } as const
 
 export type ContactInquiryScalarFieldEnum = (typeof ContactInquiryScalarFieldEnum)[keyof typeof ContactInquiryScalarFieldEnum]
+
+
+export const WantedItemScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  manufacturer: 'manufacturer',
+  category: 'category',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WantedItemScalarFieldEnum = (typeof WantedItemScalarFieldEnum)[keyof typeof WantedItemScalarFieldEnum]
 
 
 export const NewsletterSubscriberScalarFieldEnum = {

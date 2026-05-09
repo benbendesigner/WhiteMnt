@@ -27,3 +27,11 @@ export const ListingStatus = {
 } as const
 
 export type ListingStatus = (typeof ListingStatus)[keyof typeof ListingStatus]
+
+
+export const WantedStatus = {
+  ACTIVE: 'ACTIVE',
+  CLOSED: 'CLOSED'
+} as const
+
+export type WantedStatus = (typeof WantedStatus)[keyof typeof WantedStatus]

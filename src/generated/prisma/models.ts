@@ -9,6 +9,9 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Machine'
+export type * from './models/AdminUser'
+export type * from './models/AuditLog'
 export type * from './models/ContactInquiry'
+export type * from './models/WantedItem'
 export type * from './models/NewsletterSubscriber'
 export type * from './commonInputTypes'

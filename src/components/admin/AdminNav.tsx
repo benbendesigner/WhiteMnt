@@ -20,6 +20,11 @@ const links = [
     label: "Inquiries",
     active: (p: string) => p.startsWith("/admin/inquiries"),
   },
+  {
+    href: "/admin/wanted",
+    label: "Wanted",
+    active: (p: string) => p.startsWith("/admin/wanted"),
+  },
 ];
 
 export default function AdminNav() {

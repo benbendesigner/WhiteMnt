@@ -37,6 +37,30 @@ model Machine {
   @@index([status, dateListed])
 }
 
+model AdminUser {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  name         String
+  passwordHash String
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userEmail  String
+  userName   String
+  action     String
+  entityType String
+  entityId   Int?
+  entityName String?
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
 model ContactInquiry {
   id          Int      @id @default(autoincrement())
   machineId   Int?
@@ -47,6 +71,17 @@ model ContactInquiry {
   message     String
   createdAt   DateTime @default(now())
   read        Boolean  @default(false)
+}
+
+model WantedItem {
+  id           Int          @id @default(autoincrement())
+  title        String
+  manufacturer String
+  category     String
+  description  String
+  status       WantedStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model NewsletterSubscriber {
@@ -68,4 +103,9 @@ enum ListingStatus {
   ACTIVE
   PENDING
   SOLD
+}
+
+enum WantedStatus {
+  ACTIVE
+  CLOSED
 }
