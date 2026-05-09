@@ -17,22 +17,29 @@ interface Props {
 
 export default function ImageUploader({ value, onChange }: Props) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
   async function uploadFile(file: File): Promise<UploadedImage | null> {
+    if (!cloudName || !uploadPreset) {
+      throw new Error("Cloudinary env vars not configured");
+    }
     const fd = new FormData();
     fd.append("file", file);
-    fd.append("upload_preset", uploadPreset!);
+    fd.append("upload_preset", uploadPreset);
     fd.append("folder", "equipment");
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       { method: "POST", body: fd }
     );
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body?.error?.message ?? `Upload failed (${res.status})`);
+    }
     const data = await res.json();
     return { cloudinaryId: data.public_id, altText: "", sortOrder: value.length };
   }
@@ -40,10 +47,16 @@ export default function ImageUploader({ value, onChange }: Props) {
   async function handleFiles(files: FileList | null) {
     if (!files?.length) return;
     setUploading(true);
-    const results = await Promise.all(Array.from(files).map(uploadFile));
-    const valid = results.filter(Boolean) as UploadedImage[];
-    onChange([...value, ...valid].map((img, i) => ({ ...img, sortOrder: i })));
-    setUploading(false);
+    setError(null);
+    try {
+      const results = await Promise.all(Array.from(files).map(uploadFile));
+      const valid = results.filter(Boolean) as UploadedImage[];
+      onChange([...value, ...valid].map((img, i) => ({ ...img, sortOrder: i })));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   function remove(idx: number) {
@@ -59,6 +72,9 @@ export default function ImageUploader({ value, onChange }: Props) {
 
   return (
     <div className="space-y-3">
+      {error && (
+        <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+      )}
       <div
         className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/20 p-8 transition-colors hover:border-primary/50 hover:bg-primary/5"
         onClick={() => inputRef.current?.click()}
