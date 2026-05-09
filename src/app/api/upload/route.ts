@@ -14,13 +14,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    console.error("[upload] Missing Cloudinary env vars");
+    return NextResponse.json({ error: "Server misconfigured: missing Cloudinary credentials" }, { status: 500 });
+  }
+
   const formData = await req.formData();
   const file = formData.get("file");
-  if (!(file instanceof Blob)) {
+  console.log("[upload] file type:", typeof file, file?.constructor?.name);
+  if (!file || typeof file === "string") {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const arrayBuffer = await file.arrayBuffer();
+  const arrayBuffer = await (file as Blob).arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
   try {
@@ -36,6 +42,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ public_id: result.public_id });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Upload failed";
+    console.error("[upload] Cloudinary error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
