@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { SITE_NAME } from "@/lib/constants";
+import { Button } from "@/components/ui/Button";
+import { SITE_NAME, CONTACT_PHONE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Wanted",
@@ -15,14 +17,16 @@ export default async function WantedPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Equipment Wanted</h1>
-        <p className="mt-2 text-muted-foreground">
-          We are actively looking to purchase the following equipment. If you have any of these items available, please{" "}
-          <a href="/contact" className="text-primary underline-offset-4 hover:underline">
-            get in touch
-          </a>
-          .
+      <div className="mb-10">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+          Selling equipment?
+        </p>
+        <h1 className="text-4xl font-black leading-none tracking-tight text-foreground sm:text-5xl">
+          Equipment Wanted
+        </h1>
+        <p className="mt-4 max-w-xl text-muted-foreground">
+          We are actively looking to purchase the following equipment. If you have any of these
+          items available, we&apos;d love to hear from you.
         </p>
       </div>
 
@@ -43,6 +47,21 @@ export default async function WantedPage() {
           ))}
         </div>
       )}
+
+      <div className="mt-12 rounded-lg border border-border bg-muted/40 px-6 py-8 text-center">
+        <h2 className="text-xl font-black tracking-tight text-foreground">
+          Have something we&apos;re looking for?
+        </h2>
+        <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+          Reach out — we respond quickly and can arrange pickup or shipping anywhere in the US.
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <Button size="lg" render={<Link href="/contact" />}>Get in Touch</Button>
+          <Button size="lg" variant="outline" render={<a href={`tel:${CONTACT_PHONE}`} />}>
+            Call {CONTACT_PHONE}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
