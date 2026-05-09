@@ -4,6 +4,7 @@ import ExpertiseSection from "@/components/home/ExpertiseSection";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
 import LatestEquipment from "@/components/home/LatestEquipment";
 import ManufacturerLogos from "@/components/home/ManufacturerLogos";
+import WantedSection from "@/components/home/WantedSection";
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       <AboutSection />
       <ExpertiseSection />
       <LatestEquipment />
+      <WantedSection />
       <NewsletterSignup />
     </>
   );
