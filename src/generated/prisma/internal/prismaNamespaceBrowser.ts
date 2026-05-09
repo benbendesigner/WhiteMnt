@@ -100,7 +100,8 @@ export const MachineScalarFieldEnum = {
   contactEmail: 'contactEmail',
   contactPhone: 'contactPhone',
   contactNote: 'contactNote',
-  metaDescription: 'metaDescription'
+  metaDescription: 'metaDescription',
+  views: 'views'
 } as const
 
 export type MachineScalarFieldEnum = (typeof MachineScalarFieldEnum)[keyof typeof MachineScalarFieldEnum]

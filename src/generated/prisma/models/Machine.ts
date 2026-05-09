@@ -31,6 +31,7 @@ export type MachineAvgAggregateOutputType = {
   quantity: number | null
   price: runtime.Decimal | null
   salePrice: runtime.Decimal | null
+  views: number | null
 }
 
 export type MachineSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type MachineSumAggregateOutputType = {
   quantity: number | null
   price: runtime.Decimal | null
   salePrice: runtime.Decimal | null
+  views: number | null
 }
 
 export type MachineMinAggregateOutputType = {
@@ -64,6 +66,7 @@ export type MachineMinAggregateOutputType = {
   contactPhone: string | null
   contactNote: string | null
   metaDescription: string | null
+  views: number | null
 }
 
 export type MachineMaxAggregateOutputType = {
@@ -90,6 +93,7 @@ export type MachineMaxAggregateOutputType = {
   contactPhone: string | null
   contactNote: string | null
   metaDescription: string | null
+  views: number | null
 }
 
 export type MachineCountAggregateOutputType = {
@@ -118,6 +122,7 @@ export type MachineCountAggregateOutputType = {
   contactPhone: number
   contactNote: number
   metaDescription: number
+  views: number
   _all: number
 }
 
@@ -127,6 +132,7 @@ export type MachineAvgAggregateInputType = {
   quantity?: true
   price?: true
   salePrice?: true
+  views?: true
 }
 
 export type MachineSumAggregateInputType = {
@@ -134,6 +140,7 @@ export type MachineSumAggregateInputType = {
   quantity?: true
   price?: true
   salePrice?: true
+  views?: true
 }
 
 export type MachineMinAggregateInputType = {
@@ -160,6 +167,7 @@ export type MachineMinAggregateInputType = {
   contactPhone?: true
   contactNote?: true
   metaDescription?: true
+  views?: true
 }
 
 export type MachineMaxAggregateInputType = {
@@ -186,6 +194,7 @@ export type MachineMaxAggregateInputType = {
   contactPhone?: true
   contactNote?: true
   metaDescription?: true
+  views?: true
 }
 
 export type MachineCountAggregateInputType = {
@@ -214,6 +223,7 @@ export type MachineCountAggregateInputType = {
   contactPhone?: true
   contactNote?: true
   metaDescription?: true
+  views?: true
   _all?: true
 }
 
@@ -329,6 +339,7 @@ export type MachineGroupByOutputType = {
   contactPhone: string | null
   contactNote: string | null
   metaDescription: string | null
+  views: number
   _count: MachineCountAggregateOutputType | null
   _avg: MachineAvgAggregateOutputType | null
   _sum: MachineSumAggregateOutputType | null
@@ -380,6 +391,7 @@ export type MachineWhereInput = {
   contactPhone?: Prisma.StringNullableFilter<"Machine"> | string | null
   contactNote?: Prisma.StringNullableFilter<"Machine"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Machine"> | string | null
+  views?: Prisma.IntFilter<"Machine"> | number
 }
 
 export type MachineOrderByWithRelationInput = {
@@ -408,6 +420,7 @@ export type MachineOrderByWithRelationInput = {
   contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNote?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type MachineWhereUniqueInput = Prisma.AtLeast<{
@@ -439,6 +452,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
   contactPhone?: Prisma.StringNullableFilter<"Machine"> | string | null
   contactNote?: Prisma.StringNullableFilter<"Machine"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Machine"> | string | null
+  views?: Prisma.IntFilter<"Machine"> | number
 }, "id" | "slug">
 
 export type MachineOrderByWithAggregationInput = {
@@ -467,6 +481,7 @@ export type MachineOrderByWithAggregationInput = {
   contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNote?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  views?: Prisma.SortOrder
   _count?: Prisma.MachineCountOrderByAggregateInput
   _avg?: Prisma.MachineAvgOrderByAggregateInput
   _max?: Prisma.MachineMaxOrderByAggregateInput
@@ -503,6 +518,7 @@ export type MachineScalarWhereWithAggregatesInput = {
   contactPhone?: Prisma.StringNullableWithAggregatesFilter<"Machine"> | string | null
   contactNote?: Prisma.StringNullableWithAggregatesFilter<"Machine"> | string | null
   metaDescription?: Prisma.StringNullableWithAggregatesFilter<"Machine"> | string | null
+  views?: Prisma.IntWithAggregatesFilter<"Machine"> | number
 }
 
 export type MachineCreateInput = {
@@ -530,6 +546,7 @@ export type MachineCreateInput = {
   contactPhone?: string | null
   contactNote?: string | null
   metaDescription?: string | null
+  views?: number
 }
 
 export type MachineUncheckedCreateInput = {
@@ -558,6 +575,7 @@ export type MachineUncheckedCreateInput = {
   contactPhone?: string | null
   contactNote?: string | null
   metaDescription?: string | null
+  views?: number
 }
 
 export type MachineUpdateInput = {
@@ -585,6 +603,7 @@ export type MachineUpdateInput = {
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type MachineUncheckedUpdateInput = {
@@ -613,6 +632,7 @@ export type MachineUncheckedUpdateInput = {
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type MachineCreateManyInput = {
@@ -641,6 +661,7 @@ export type MachineCreateManyInput = {
   contactPhone?: string | null
   contactNote?: string | null
   metaDescription?: string | null
+  views?: number
 }
 
 export type MachineUpdateManyMutationInput = {
@@ -668,6 +689,7 @@ export type MachineUpdateManyMutationInput = {
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type MachineUncheckedUpdateManyInput = {
@@ -696,6 +718,7 @@ export type MachineUncheckedUpdateManyInput = {
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type MachineCountOrderByAggregateInput = {
@@ -724,6 +747,7 @@ export type MachineCountOrderByAggregateInput = {
   contactPhone?: Prisma.SortOrder
   contactNote?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type MachineAvgOrderByAggregateInput = {
@@ -731,6 +755,7 @@ export type MachineAvgOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
   salePrice?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type MachineMaxOrderByAggregateInput = {
@@ -757,6 +782,7 @@ export type MachineMaxOrderByAggregateInput = {
   contactPhone?: Prisma.SortOrder
   contactNote?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type MachineMinOrderByAggregateInput = {
@@ -783,6 +809,7 @@ export type MachineMinOrderByAggregateInput = {
   contactPhone?: Prisma.SortOrder
   contactNote?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type MachineSumOrderByAggregateInput = {
@@ -790,6 +817,7 @@ export type MachineSumOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
   salePrice?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -864,6 +892,7 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contactPhone?: boolean
   contactNote?: boolean
   metaDescription?: boolean
+  views?: boolean
 }, ExtArgs["result"]["machine"]>
 
 export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -892,6 +921,7 @@ export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   contactPhone?: boolean
   contactNote?: boolean
   metaDescription?: boolean
+  views?: boolean
 }, ExtArgs["result"]["machine"]>
 
 export type MachineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -920,6 +950,7 @@ export type MachineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   contactPhone?: boolean
   contactNote?: boolean
   metaDescription?: boolean
+  views?: boolean
 }, ExtArgs["result"]["machine"]>
 
 export type MachineSelectScalar = {
@@ -948,9 +979,10 @@ export type MachineSelectScalar = {
   contactPhone?: boolean
   contactNote?: boolean
   metaDescription?: boolean
+  views?: boolean
 }
 
-export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription", ExtArgs["result"]["machine"]>
+export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
 
 export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Machine"
@@ -981,6 +1013,7 @@ export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     contactPhone: string | null
     contactNote: string | null
     metaDescription: string | null
+    views: number
   }, ExtArgs["result"]["machine"]>
   composites: {}
 }
@@ -1429,6 +1462,7 @@ export interface MachineFieldRefs {
   readonly contactPhone: Prisma.FieldRef<"Machine", 'String'>
   readonly contactNote: Prisma.FieldRef<"Machine", 'String'>
   readonly metaDescription: Prisma.FieldRef<"Machine", 'String'>
+  readonly views: Prisma.FieldRef<"Machine", 'Int'>
 }
     
 

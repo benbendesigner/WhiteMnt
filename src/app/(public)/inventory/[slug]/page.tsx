@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { cloudinaryUrl } from "@/lib/cloudinary";
 import ImageGallery from "@/components/inventory/ImageGallery";
@@ -59,6 +61,8 @@ export default async function MachinePage({
   const machine = await prisma.machine.findUnique({ where: { slug } });
 
   if (!machine || machine.status === "DRAFT") notFound();
+
+  prisma.machine.update({ where: { slug }, data: { views: { increment: 1 } } }).catch(() => {});
 
   const contactEmail = machine.contactEmail ?? CONTACT_EMAIL;
   const contactPhone = machine.contactPhone ?? CONTACT_PHONE;

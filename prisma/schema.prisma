@@ -33,6 +33,7 @@ model Machine {
   contactPhone    String?
   contactNote     String?
   metaDescription String?
+  views           Int      @default(0)
 
   @@index([status, dateListed])
 }

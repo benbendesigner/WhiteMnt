@@ -11,7 +11,7 @@ import type { Machine, ListingStatus } from "@/generated/prisma/client";
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries";
+type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries" | "views";
 type SortDir = "asc" | "desc";
 
 interface Props {
@@ -166,6 +166,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
         case "status":       cmp = a.status.localeCompare(b.status); break;
         case "dateListed":   cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
         case "inquiries":    cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
+        case "views":        cmp = a.views - b.views; break;
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -228,6 +229,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               <th className="px-4 py-3 text-left text-xs text-muted-foreground">Qty</th>
               <Th col="status" label="Status" />
               <Th col="dateListed" label="Listed" />
+              <Th col="views" label="Views" className="text-center" />
               <Th col="inquiries" label="Inquiries" className="text-center" />
               <th className="px-4 py-3 text-right text-xs text-muted-foreground">Actions</th>
             </tr>
@@ -262,6 +264,9 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                     {new Date(m.dateListed).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-center text-muted-foreground">
+                    {m.views > 0 ? m.views.toLocaleString() : "—"}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {inquiries > 0 && (
