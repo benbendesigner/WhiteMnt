@@ -6,9 +6,9 @@ import NewsletterSignup from "./NewsletterSignup";
 export default function CTABanner() {
   return (
     <section className="border-y border-border bg-muted/40 px-4 py-14 sm:px-6">
-      <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-16">
+      <div className="relative mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-0">
         {/* Buying / Wanted */}
-        <div className="flex flex-col items-center text-center md:items-start md:text-left">
+        <div className="flex flex-col items-center text-center md:items-start md:pr-16 md:text-left">
           <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
             <SearchIcon className="size-5" />
           </div>
@@ -28,12 +28,14 @@ export default function CTABanner() {
           </div>
         </div>
 
-        {/* Divider — vertical on desktop, horizontal on mobile */}
-        <div className="hidden md:block md:absolute md:left-1/2 md:top-0 md:h-full md:w-px md:bg-border" />
+        {/* Divider */}
         <div className="border-t border-border md:hidden" />
+        <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-border md:block" />
 
         {/* Newsletter */}
-        <NewsletterSignup inline />
+        <div className="md:pl-16">
+          <NewsletterSignup inline />
+        </div>
       </div>
     </section>
   );
