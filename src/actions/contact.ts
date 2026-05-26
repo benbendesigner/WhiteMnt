@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { resend, CONTACT_EMAIL } from "@/lib/resend";
+import { getResend, CONTACT_EMAIL } from "@/lib/resend";
 import { SITE_NAME } from "@/lib/constants";
 
 const schema = z.object({
@@ -40,8 +40,9 @@ export async function submitContactInquiry(
     return { success: false, message: "Failed to send your message. Please try again." };
   }
 
+  const resend = getResend();
   try {
-    await resend.emails.send({
+    await resend?.emails.send({
       from: `${SITE_NAME} <noreply@resend.dev>`,
       to: CONTACT_EMAIL,
       subject: data.machineName
