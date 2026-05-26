@@ -2,6 +2,7 @@ import { config as loadEnv } from "dotenv";
 import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import type { Condition, ListingStatus } from "../src/generated/prisma/enums";
 
 loadEnv({ path: ".env.local" });
 loadEnv();
@@ -10,8 +11,11 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL! });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-const items = 
-[
+const items: Array<{
+  title: string; slug: string; manufacturer: string; category: string;
+  model?: string | null; quantity: number; description: string;
+  condition: Condition; status: ListingStatus; callForPrice: boolean;
+}> = [
   {
     "title": "AMP Pistol Grip System Multiplexer Hand Tool Kit",
     "slug": "amp-pistol-grip-system-multiplexer-hand-tool-kit",
