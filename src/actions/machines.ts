@@ -57,26 +57,32 @@ export async function createMachine(
   _prev: MachineFormState,
   formData: FormData
 ): Promise<MachineFormState> {
-  await requireAdmin();
+  try {
+    await requireAdmin();
 
-  const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
-  if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten().fieldErrors };
+    const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
+    if (!parsed.success) {
+      return { success: false, errors: parsed.error.flatten().fieldErrors };
+    }
+
+    const { images, specs, ...data } = parsed.data;
+
+    const slug = await uniqueSlug(data.title, async (s) => {
+      const exists = await prisma.machine.findUnique({ where: { slug: s } });
+      return !!exists;
+    });
+
+    const machine = await prisma.machine.create({
+      data: { ...data, slug, specs: specs ?? undefined, images: images ?? [] },
+    });
+
+    if (data.status === "ACTIVE") revalidatePath("/inventory");
+    redirect(`/admin/machines/${machine.id}`);
+  } catch (err) {
+    if ((err as { digest?: string }).digest?.startsWith("NEXT_REDIRECT")) throw err;
+    console.error("createMachine error:", err);
+    return { success: false, message: "Failed to create listing. Please try again." };
   }
-
-  const { images, specs, ...data } = parsed.data;
-
-  const slug = await uniqueSlug(data.title, async (s) => {
-    const exists = await prisma.machine.findUnique({ where: { slug: s } });
-    return !!exists;
-  });
-
-  const machine = await prisma.machine.create({
-    data: { ...data, slug, specs: specs ?? undefined, images: images ?? [] },
-  });
-
-  if (data.status === "ACTIVE") revalidatePath("/inventory");
-  redirect(`/admin/machines/${machine.id}`);
 }
 
 export async function updateMachine(
@@ -84,27 +90,33 @@ export async function updateMachine(
   _prev: MachineFormState,
   formData: FormData
 ): Promise<MachineFormState> {
-  await requireAdmin();
+  try {
+    await requireAdmin();
 
-  const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
-  if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten().fieldErrors };
+    const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
+    if (!parsed.success) {
+      return { success: false, errors: parsed.error.flatten().fieldErrors };
+    }
+
+    const { images, specs, ...data } = parsed.data;
+
+    const existing = await prisma.machine.findUnique({ where: { id } });
+    if (!existing) return { success: false, message: "Machine not found" };
+
+    await prisma.machine.update({
+      where: { id },
+      data: { ...data, specs: specs ?? undefined, images: images ?? [] },
+    });
+
+    revalidatePath("/inventory");
+    revalidatePath(`/inventory/${existing.slug}`);
+
+    return { success: true, message: "Listing updated." };
+  } catch (err) {
+    if ((err as { digest?: string }).digest?.startsWith("NEXT_REDIRECT")) throw err;
+    console.error("updateMachine error:", err);
+    return { success: false, message: "Failed to save listing. Please try again." };
   }
-
-  const { images, specs, ...data } = parsed.data;
-
-  const existing = await prisma.machine.findUnique({ where: { id } });
-  if (!existing) return { success: false, message: "Machine not found" };
-
-  await prisma.machine.update({
-    where: { id },
-    data: { ...data, specs: specs ?? undefined, images: images ?? [] },
-  });
-
-  revalidatePath("/inventory");
-  revalidatePath(`/inventory/${existing.slug}`);
-
-  return { success: true, message: "Listing updated." };
 }
 
 export async function updateMachineStatus(id: number, status: ListingStatus) {

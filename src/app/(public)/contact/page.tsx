@@ -62,6 +62,11 @@ export default function ContactPage() {
         </div>
       ) : (
         <form action={action} className="mt-8 space-y-4">
+          {state.message && (
+            <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {state.message}
+            </p>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Name" id="name" name="name" required error={state.errors?.name?.[0]} />
             <Input

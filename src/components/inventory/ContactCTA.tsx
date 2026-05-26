@@ -62,6 +62,11 @@ export default function ContactCTA({ machineId, machineName, contactPhone, conta
       </div>
 
       <form action={action} className="space-y-3">
+        {state.message && (
+          <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {state.message}
+          </p>
+        )}
         <input type="hidden" name="machineId" value={machineId} />
         <input type="hidden" name="machineName" value={machineName} />
 

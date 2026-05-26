@@ -33,7 +33,12 @@ export async function submitContactInquiry(
 
   const data = parsed.data;
 
-  await prisma.contactInquiry.create({ data });
+  try {
+    await prisma.contactInquiry.create({ data });
+  } catch (err) {
+    console.error("submitContactInquiry error:", err);
+    return { success: false, message: "Failed to send your message. Please try again." };
+  }
 
   try {
     await resend.emails.send({
