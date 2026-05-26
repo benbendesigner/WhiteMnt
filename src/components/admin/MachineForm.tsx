@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState, useId } from "react";
+import { useActionState, useState, useId, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { createMachine, updateMachine, type MachineFormState } from "@/actions/machines";
 import ImageUploader, { type UploadedImage } from "./ImageUploader";
 import SpecsEditor from "./SpecsEditor";
@@ -23,6 +24,18 @@ const initial: MachineFormState = { success: false };
 export default function MachineForm({ machine, suggestions }: Props) {
   const action = machine ? updateMachine.bind(null, machine.id) : createMachine;
   const [state, formAction, pending] = useActionState(action, initial);
+
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    if (state.success) {
+      toast.success(state.message ?? "Listing saved.");
+    } else if (state.message) {
+      toast.error(state.message);
+    } else if (state.errors) {
+      toast.error("Please fix the errors below.");
+    }
+  }, [state]);
 
   // Field state (needed for AI draft + spec preset)
   const [title, setTitle] = useState(machine?.title ?? "");
@@ -94,16 +107,6 @@ export default function MachineForm({ machine, suggestions }: Props) {
 
   return (
     <form action={formAction} className="space-y-8">
-      {state.message && !state.success && (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-          {state.message}
-        </div>
-      )}
-      {state.success && (
-        <div className="rounded-lg border border-border bg-muted/50 p-3 text-sm text-foreground">
-          {state.message}
-        </div>
-      )}
 
       <input type="hidden" name="specs" value={specsJson} />
       <input type="hidden" name="images" value={JSON.stringify(images)} />
