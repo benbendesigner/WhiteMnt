@@ -206,7 +206,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
       <section className="space-y-4">
         <h2 className="border-b border-border pb-2 text-base font-semibold text-foreground">Description</h2>
         <Textarea
-          label=""
+          label="Description *"
           id="description"
           name="description"
           required
@@ -244,7 +244,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
             type="checkbox"
             id="callForPrice"
             name="callForPrice"
-            defaultChecked={machine?.callForPrice ?? false}
+            defaultChecked={machine?.callForPrice ?? true}
             className="accent-primary"
           />
           <label htmlFor="callForPrice" className="text-sm text-foreground/80">
