@@ -16,13 +16,13 @@ interface Props {
 }
 
 export default function ImageUploader({ value, onChange }: Props) {
-  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-  async function uploadFile(file: File): Promise<UploadedImage | null> {
+  async function uploadFile(file: File, currentCount: number): Promise<UploadedImage> {
     const fd = new FormData();
     fd.append("file", file);
 
@@ -32,21 +32,29 @@ export default function ImageUploader({ value, onChange }: Props) {
       throw new Error(body?.error ?? `Upload failed (${res.status})`);
     }
     const data = await res.json();
-    return { cloudinaryId: data.public_id, altText: "", sortOrder: value.length };
+    return { cloudinaryId: data.public_id, altText: "", sortOrder: currentCount };
   }
 
   async function handleFiles(files: FileList | null) {
     if (!files?.length) return;
-    setUploading(true);
     setError(null);
-    try {
-      const results = await Promise.all(Array.from(files).map(uploadFile));
-      const valid = results.filter(Boolean) as UploadedImage[];
-      onChange([...value, ...valid].map((img, i) => ({ ...img, sortOrder: i })));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setUploading(false);
+    const fileArray = Array.from(files);
+    const uploaded: UploadedImage[] = [];
+
+    for (let i = 0; i < fileArray.length; i++) {
+      setProgress(`Uploading ${i + 1} of ${fileArray.length}…`);
+      try {
+        const img = await uploadFile(fileArray[i], value.length + uploaded.length);
+        uploaded.push(img);
+      } catch (err) {
+        setError(`"${fileArray[i].name}": ${err instanceof Error ? err.message : "Upload failed"}`);
+        break;
+      }
+    }
+
+    setProgress(null);
+    if (uploaded.length) {
+      onChange([...value, ...uploaded].map((img, i) => ({ ...img, sortOrder: i })));
     }
   }
 
@@ -75,7 +83,7 @@ export default function ImageUploader({ value, onChange }: Props) {
         <UploadCloudIcon className="size-8 text-muted-foreground" />
         <div className="text-center">
           <p className="text-sm font-medium text-foreground">
-            {uploading ? "Uploading..." : "Drag photos here or click to select"}
+            {progress ?? "Drag photos here or click to select"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">JPG, PNG, or WebP · Max 10 MB each</p>
         </div>
@@ -86,7 +94,7 @@ export default function ImageUploader({ value, onChange }: Props) {
           multiple
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
-          disabled={uploading}
+          disabled={!!progress}
         />
       </div>
 
