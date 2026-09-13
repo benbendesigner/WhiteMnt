@@ -31,7 +31,7 @@ export default function HeroSection() {
         </h1>
         <p className="mt-6 max-w-xl text-base text-white/70 sm:text-lg">
           We buy and resell wire processing equipment — strippers, crimpers, and cutters from
-          Komax, Schleuniger, Metzner, Carpenter MFG, and more. Based in New England, we&apos;ve
+          Komax, Schleuniger, Metzner, Carpenter, and more. Based in New England, we&apos;ve
           shipped to shops across the country.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">

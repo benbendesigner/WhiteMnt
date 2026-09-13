@@ -21,7 +21,7 @@ export default function AboutSection() {
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               We are two industry veterans based in New England who spent decades running wire
               processing equipment in production environments. After years of hands-on work with
-              equipment from Komax, Schleuniger, Metzner, Artos, Carpenter MFG, and others, we
+              equipment from Komax, Schleuniger, Metzner, Artos, Carpenter, and others, we
               started buying and reselling the equipment we know best.
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
