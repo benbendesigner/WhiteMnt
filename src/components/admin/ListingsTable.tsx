@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition, useState, useMemo, useActionState } from "react";
-import { updateMachineStatus, updateMachineFeatured, deleteMachine, recordSale, type SaleFormState } from "@/actions/machines";
+import { useTransition, useState, useMemo } from "react";
+import { updateMachineStatus, updateMachineFeatured, deleteMachine } from "@/actions/machines";
+import SaleDialog from "./SaleDialog";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import type { Machine, ListingStatus } from "@/generated/prisma/client";
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon, StarIcon } from "lucide-react";
@@ -32,87 +31,6 @@ const STATUS_LABEL: Record<ListingStatus, string> = {
   SOLD:    "Sold",
   DRAFT:   "Draft",
 };
-
-const saleInitial: SaleFormState = { success: false };
-
-function SaleDialog({
-  machine,
-  open,
-  onClose,
-}: {
-  machine: Machine | null;
-  open: boolean;
-  onClose: () => void;
-}) {
-  const boundAction = machine
-    ? recordSale.bind(null, machine.id)
-    : async (_prev: SaleFormState, _fd: FormData) => saleInitial;
-
-  const [state, formAction, pending] = useActionState(boundAction, saleInitial);
-
-  if (state.success) {
-    onClose();
-    return null;
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent showCloseButton>
-        <DialogHeader>
-          <DialogTitle>Record sale</DialogTitle>
-          {machine && (
-            <p className="text-sm text-muted-foreground">{machine.title}</p>
-          )}
-        </DialogHeader>
-
-        <form action={formAction} className="space-y-3 px-4 pb-2">
-          <Input
-            label="Buyer name / company *"
-            id="soldTo"
-            name="soldTo"
-            required
-            placeholder="Acme Corp"
-            error={state.errors?.soldTo?.[0]}
-          />
-          <Input
-            label="Buyer email"
-            id="soldEmail"
-            name="soldEmail"
-            type="email"
-            placeholder="buyer@example.com"
-            error={state.errors?.soldEmail?.[0]}
-          />
-          <Input
-            label="Sale price (USD)"
-            id="salePrice"
-            name="salePrice"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder={machine?.price ? String(Number(machine.price)) : "e.g. 8500"}
-            error={state.errors?.salePrice?.[0]}
-          />
-          <Textarea
-            label="Notes"
-            id="soldNotes"
-            name="soldNotes"
-            rows={3}
-            placeholder="Any notes about the sale…"
-          />
-
-          <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" size="sm" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" disabled={pending}>
-              {pending ? "Saving…" : "Mark as sold"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 export default function ListingsTable({ machines, inquiryMap }: Props) {
   const [, startTransition] = useTransition();

@@ -29,6 +29,27 @@ export default function AboutSection() {
               We know this equipment, we know what it is worth, and we know who is looking for
               it — whether you&apos;re down the road in New England or across the country.
             </p>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              Between us we also run{" "}
+              <a
+                href="https://www.commissionbrokers.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                commissionbrokers.com
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://www.whitemtnrep.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                whitemtnrep.com
+              </a>
+              .
+            </p>
             <div className="mt-8 grid grid-cols-3 gap-4">
               {stats.map((item) => (
                 <Card key={item.label} className="border-foreground/10 text-center">

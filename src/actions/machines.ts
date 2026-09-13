@@ -152,6 +152,7 @@ export async function updateMachineFeatured(id: number, featured: boolean) {
 const saleSchema = z.object({
   soldTo: z.string().min(1, "Buyer name is required"),
   soldEmail: z.string().email("Valid email required").optional().or(z.literal("")),
+  quantity: z.coerce.number().int().min(1, "Must sell at least one"),
   salePrice: z.preprocess(
     (v) => (v === "" || v === null ? null : Number(v)),
     z.number().positive().nullable()
@@ -177,22 +178,52 @@ export async function recordSale(
     return { success: false, errors: parsed.error.flatten().fieldErrors };
   }
 
-  const { soldTo, salePrice, soldNotes } = parsed.data;
+  const { soldTo, soldEmail, quantity, salePrice, soldNotes } = parsed.data;
 
-  const machine = await prisma.machine.update({
-    where: { id },
-    data: {
-      status: "SOLD",
-      soldAt: new Date(),
-      soldTo,
-      salePrice,
-      soldNotes: soldNotes || null,
-    },
-  });
+  const machine = await prisma.machine.findUnique({ where: { id } });
+  if (!machine) return { success: false, message: "Listing not found" };
+
+  if (quantity > machine.quantity) {
+    return {
+      success: false,
+      errors: { quantity: [`Only ${machine.quantity} left on this listing`] },
+    };
+  }
+
+  const remaining = machine.quantity - quantity;
+
+  // The sale row and the listing update have to agree, or stock drifts.
+  await prisma.$transaction([
+    prisma.sale.create({
+      data: {
+        machineId: machine.id,
+        itemTitle: machine.title,
+        manufacturer: machine.manufacturer,
+        category: machine.category,
+        quantity,
+        salePrice,
+        buyerName: soldTo,
+        buyerEmail: soldEmail || null,
+        notes: soldNotes || null,
+        soldAt: new Date(),
+      },
+    }),
+    prisma.machine.update({
+      where: { id },
+      data: {
+        quantity: remaining,
+        // Partial sales leave the listing live with reduced stock; it only
+        // closes once the last unit is gone.
+        ...(remaining === 0 ? { status: "SOLD" as const, soldAt: new Date() } : {}),
+      },
+    }),
+  ]);
 
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${machine.slug}`);
   revalidatePath("/admin");
+  revalidatePath(`/admin/machines/${id}`);
+  revalidatePath("/admin/reports");
   revalidatePath("/");
 
   return { success: true };

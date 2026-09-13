@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Machine: 'Machine',
+  Sale: 'Sale',
   AdminUser: 'AdminUser',
   AuditLog: 'AuditLog',
   ContactInquiry: 'ContactInquiry',
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "machine" | "adminUser" | "auditLog" | "contactInquiry" | "wantedItem" | "newsletterSubscriber"
+    modelProps: "machine" | "sale" | "adminUser" | "auditLog" | "contactInquiry" | "wantedItem" | "newsletterSubscriber"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -480,6 +481,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MachineCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MachineCountAggregateOutputType> | number
+        }
+      }
+    }
+    Sale: {
+      payload: Prisma.$SalePayload<ExtArgs>
+      fields: Prisma.SaleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SaleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SaleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        findFirst: {
+          args: Prisma.SaleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SaleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        findMany: {
+          args: Prisma.SaleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>[]
+        }
+        create: {
+          args: Prisma.SaleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        createMany: {
+          args: Prisma.SaleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SaleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>[]
+        }
+        delete: {
+          args: Prisma.SaleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        update: {
+          args: Prisma.SaleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        deleteMany: {
+          args: Prisma.SaleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SaleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SaleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>[]
+        }
+        upsert: {
+          args: Prisma.SaleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalePayload>
+        }
+        aggregate: {
+          args: Prisma.SaleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSale>
+        }
+        groupBy: {
+          args: Prisma.SaleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SaleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaleCountAggregateOutputType> | number
         }
       }
     }
@@ -925,6 +1000,23 @@ export const MachineScalarFieldEnum = {
 export type MachineScalarFieldEnum = (typeof MachineScalarFieldEnum)[keyof typeof MachineScalarFieldEnum]
 
 
+export const SaleScalarFieldEnum = {
+  id: 'id',
+  machineId: 'machineId',
+  itemTitle: 'itemTitle',
+  manufacturer: 'manufacturer',
+  category: 'category',
+  quantity: 'quantity',
+  salePrice: 'salePrice',
+  buyerName: 'buyerName',
+  buyerEmail: 'buyerEmail',
+  notes: 'notes',
+  soldAt: 'soldAt'
+} as const
+
+export type SaleScalarFieldEnum = (typeof SaleScalarFieldEnum)[keyof typeof SaleScalarFieldEnum]
+
+
 export const AdminUserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -1281,6 +1373,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   machine?: Prisma.MachineOmit
+  sale?: Prisma.SaleOmit
   adminUser?: Prisma.AdminUserOmit
   auditLog?: Prisma.AuditLogOmit
   contactInquiry?: Prisma.ContactInquiryOmit

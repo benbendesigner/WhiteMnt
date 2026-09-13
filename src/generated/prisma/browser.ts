@@ -23,6 +23,13 @@ export * from './enums';
  */
 export type Machine = Prisma.MachineModel
 /**
+ * Model Sale
+ * One recorded sale. Kept separate from Machine so the sales history survives
+ * a listing being edited or deleted, and so a listing with quantity > 1 can be
+ * sold off across several transactions.
+ */
+export type Sale = Prisma.SaleModel
+/**
  * Model AdminUser
  * 
  */
