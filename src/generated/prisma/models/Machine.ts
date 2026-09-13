@@ -400,6 +400,7 @@ export type MachineWhereInput = {
   contactNote?: Prisma.StringNullableFilter<"Machine"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Machine"> | string | null
   views?: Prisma.IntFilter<"Machine"> | number
+  sales?: Prisma.SaleListRelationFilter
 }
 
 export type MachineOrderByWithRelationInput = {
@@ -430,6 +431,7 @@ export type MachineOrderByWithRelationInput = {
   contactNote?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   views?: Prisma.SortOrder
+  sales?: Prisma.SaleOrderByRelationAggregateInput
 }
 
 export type MachineWhereUniqueInput = Prisma.AtLeast<{
@@ -463,6 +465,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
   contactNote?: Prisma.StringNullableFilter<"Machine"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Machine"> | string | null
   views?: Prisma.IntFilter<"Machine"> | number
+  sales?: Prisma.SaleListRelationFilter
 }, "id" | "slug">
 
 export type MachineOrderByWithAggregationInput = {
@@ -560,6 +563,7 @@ export type MachineCreateInput = {
   contactNote?: string | null
   metaDescription?: string | null
   views?: number
+  sales?: Prisma.SaleCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUncheckedCreateInput = {
@@ -590,6 +594,7 @@ export type MachineUncheckedCreateInput = {
   contactNote?: string | null
   metaDescription?: string | null
   views?: number
+  sales?: Prisma.SaleUncheckedCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUpdateInput = {
@@ -619,6 +624,7 @@ export type MachineUpdateInput = {
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  sales?: Prisma.SaleUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineUncheckedUpdateInput = {
@@ -649,6 +655,7 @@ export type MachineUncheckedUpdateInput = {
   contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  sales?: Prisma.SaleUncheckedUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineCreateManyInput = {
@@ -842,6 +849,11 @@ export type MachineSumOrderByAggregateInput = {
   views?: Prisma.SortOrder
 }
 
+export type MachineNullableScalarRelationFilter = {
+  is?: Prisma.MachineWhereInput | null
+  isNot?: Prisma.MachineWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -886,6 +898,185 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type MachineCreateNestedOneWithoutSalesInput = {
+  create?: Prisma.XOR<Prisma.MachineCreateWithoutSalesInput, Prisma.MachineUncheckedCreateWithoutSalesInput>
+  connectOrCreate?: Prisma.MachineCreateOrConnectWithoutSalesInput
+  connect?: Prisma.MachineWhereUniqueInput
+}
+
+export type MachineUpdateOneWithoutSalesNestedInput = {
+  create?: Prisma.XOR<Prisma.MachineCreateWithoutSalesInput, Prisma.MachineUncheckedCreateWithoutSalesInput>
+  connectOrCreate?: Prisma.MachineCreateOrConnectWithoutSalesInput
+  upsert?: Prisma.MachineUpsertWithoutSalesInput
+  disconnect?: Prisma.MachineWhereInput | boolean
+  delete?: Prisma.MachineWhereInput | boolean
+  connect?: Prisma.MachineWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutSalesInput, Prisma.MachineUpdateWithoutSalesInput>, Prisma.MachineUncheckedUpdateWithoutSalesInput>
+}
+
+export type MachineCreateWithoutSalesInput = {
+  title: string
+  slug: string
+  manufacturer: string
+  category: string
+  model?: string | null
+  serialNumber?: string | null
+  condition?: $Enums.Condition
+  quantity?: number
+  description: string
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  callForPrice?: boolean
+  status?: $Enums.ListingStatus
+  featured?: boolean
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dateListed?: Date | string
+  updatedAt?: Date | string
+  soldAt?: Date | string | null
+  soldTo?: string | null
+  salePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  soldNotes?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  contactNote?: string | null
+  metaDescription?: string | null
+  views?: number
+}
+
+export type MachineUncheckedCreateWithoutSalesInput = {
+  id?: number
+  title: string
+  slug: string
+  manufacturer: string
+  category: string
+  model?: string | null
+  serialNumber?: string | null
+  condition?: $Enums.Condition
+  quantity?: number
+  description: string
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  callForPrice?: boolean
+  status?: $Enums.ListingStatus
+  featured?: boolean
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dateListed?: Date | string
+  updatedAt?: Date | string
+  soldAt?: Date | string | null
+  soldTo?: string | null
+  salePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  soldNotes?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  contactNote?: string | null
+  metaDescription?: string | null
+  views?: number
+}
+
+export type MachineCreateOrConnectWithoutSalesInput = {
+  where: Prisma.MachineWhereUniqueInput
+  create: Prisma.XOR<Prisma.MachineCreateWithoutSalesInput, Prisma.MachineUncheckedCreateWithoutSalesInput>
+}
+
+export type MachineUpsertWithoutSalesInput = {
+  update: Prisma.XOR<Prisma.MachineUpdateWithoutSalesInput, Prisma.MachineUncheckedUpdateWithoutSalesInput>
+  create: Prisma.XOR<Prisma.MachineCreateWithoutSalesInput, Prisma.MachineUncheckedCreateWithoutSalesInput>
+  where?: Prisma.MachineWhereInput
+}
+
+export type MachineUpdateToOneWithWhereWithoutSalesInput = {
+  where?: Prisma.MachineWhereInput
+  data: Prisma.XOR<Prisma.MachineUpdateWithoutSalesInput, Prisma.MachineUncheckedUpdateWithoutSalesInput>
+}
+
+export type MachineUpdateWithoutSalesInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  manufacturer?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumConditionFieldUpdateOperationsInput | $Enums.Condition
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  soldTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  soldNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type MachineUncheckedUpdateWithoutSalesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  manufacturer?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumConditionFieldUpdateOperationsInput | $Enums.Condition
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  soldTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  soldNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+
+/**
+ * Count Type MachineCountOutputType
+ */
+
+export type MachineCountOutputType = {
+  sales: number
+}
+
+export type MachineCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sales?: boolean | MachineCountOutputTypeCountSalesArgs
+}
+
+/**
+ * MachineCountOutputType without action
+ */
+export type MachineCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MachineCountOutputType
+   */
+  select?: Prisma.MachineCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MachineCountOutputType without action
+ */
+export type MachineCountOutputTypeCountSalesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SaleWhereInput
+}
 
 
 export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -916,6 +1107,8 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contactNote?: boolean
   metaDescription?: boolean
   views?: boolean
+  sales?: boolean | Prisma.Machine$salesArgs<ExtArgs>
+  _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["machine"]>
 
 export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1009,10 +1202,18 @@ export type MachineSelectScalar = {
 }
 
 export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "featured" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
+export type MachineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sales?: boolean | Prisma.Machine$salesArgs<ExtArgs>
+  _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type MachineIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type MachineIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Machine"
-  objects: {}
+  objects: {
+    sales: Prisma.$SalePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     title: string
@@ -1435,6 +1636,7 @@ readonly fields: MachineFieldRefs;
  */
 export interface Prisma__MachineClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  sales<T extends Prisma.Machine$salesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$salesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1508,6 +1710,10 @@ export type MachineFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * Filter, which Machine to fetch.
    */
   where: Prisma.MachineWhereUniqueInput
@@ -1526,6 +1732,10 @@ export type MachineFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * Filter, which Machine to fetch.
    */
   where: Prisma.MachineWhereUniqueInput
@@ -1543,6 +1753,10 @@ export type MachineFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Machine
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
   /**
    * Filter, which Machine to fetch.
    */
@@ -1592,6 +1806,10 @@ export type MachineFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * Filter, which Machine to fetch.
    */
   where?: Prisma.MachineWhereInput
@@ -1639,6 +1857,10 @@ export type MachineFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Machine
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
   /**
    * Filter, which Machines to fetch.
    */
@@ -1688,6 +1910,10 @@ export type MachineCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * The data needed to create a Machine.
    */
   data: Prisma.XOR<Prisma.MachineCreateInput, Prisma.MachineUncheckedCreateInput>
@@ -1735,6 +1961,10 @@ export type MachineUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Machine
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
   /**
    * The data needed to update a Machine.
    */
@@ -1802,6 +2032,10 @@ export type MachineUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * The filter to search for the Machine to update in case it exists.
    */
   where: Prisma.MachineWhereUniqueInput
@@ -1828,6 +2062,10 @@ export type MachineDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  /**
    * Filter which Machine to delete.
    */
   where: Prisma.MachineWhereUniqueInput
@@ -1848,6 +2086,30 @@ export type MachineDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Machine.sales
+ */
+export type Machine$salesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sale
+   */
+  select?: Prisma.SaleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sale
+   */
+  omit?: Prisma.SaleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SaleInclude<ExtArgs> | null
+  where?: Prisma.SaleWhereInput
+  orderBy?: Prisma.SaleOrderByWithRelationInput | Prisma.SaleOrderByWithRelationInput[]
+  cursor?: Prisma.SaleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SaleScalarFieldEnum | Prisma.SaleScalarFieldEnum[]
+}
+
+/**
  * Machine without action
  */
 export type MachineDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1859,4 +2121,8 @@ export type MachineDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Machine
    */
   omit?: Prisma.MachineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
 }

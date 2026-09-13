@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Machine: 'Machine',
+  Sale: 'Sale',
   AdminUser: 'AdminUser',
   AuditLog: 'AuditLog',
   ContactInquiry: 'ContactInquiry',
@@ -106,6 +107,23 @@ export const MachineScalarFieldEnum = {
 } as const
 
 export type MachineScalarFieldEnum = (typeof MachineScalarFieldEnum)[keyof typeof MachineScalarFieldEnum]
+
+
+export const SaleScalarFieldEnum = {
+  id: 'id',
+  machineId: 'machineId',
+  itemTitle: 'itemTitle',
+  manufacturer: 'manufacturer',
+  category: 'category',
+  quantity: 'quantity',
+  salePrice: 'salePrice',
+  buyerName: 'buyerName',
+  buyerEmail: 'buyerEmail',
+  notes: 'notes',
+  soldAt: 'soldAt'
+} as const
+
+export type SaleScalarFieldEnum = (typeof SaleScalarFieldEnum)[keyof typeof SaleScalarFieldEnum]
 
 
 export const AdminUserScalarFieldEnum = {

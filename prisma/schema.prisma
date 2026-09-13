@@ -35,9 +35,36 @@ model Machine {
   contactNote     String?
   metaDescription String?
   views           Int      @default(0)
+  sales           Sale[]
 
   @@index([status, dateListed])
   @@index([featured, status])
+}
+
+/// One recorded sale. Kept separate from Machine so the sales history survives
+/// a listing being edited or deleted, and so a listing with quantity > 1 can be
+/// sold off across several transactions.
+model Sale {
+  id           Int      @id @default(autoincrement())
+  machineId    Int?
+  machine      Machine? @relation(fields: [machineId], references: [id], onDelete: SetNull)
+
+  /// Copied from the listing at the time of sale so the report stays accurate
+  /// even if the listing is later renamed or removed.
+  itemTitle    String
+  manufacturer String
+  category     String
+
+  quantity     Int      @default(1)
+  /// Total received for this sale, not a per-unit price.
+  salePrice    Decimal? @db.Decimal(10, 2)
+  buyerName    String
+  buyerEmail   String?
+  notes        String?
+  soldAt       DateTime @default(now())
+
+  @@index([soldAt])
+  @@index([machineId])
 }
 
 model AdminUser {
