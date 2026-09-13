@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { MapPinIcon } from "lucide-react";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_EMAIL } from "@/lib/constants";
+import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
 
 export default function Footer() {
   return (
@@ -45,7 +45,7 @@ export default function Footer() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <a href={`tel:${CONTACT_PHONE}`} className="opacity-60 transition-opacity hover:opacity-100">
+                <a href={`tel:${CONTACT_PHONE_TEL}`} className="opacity-60 transition-opacity hover:opacity-100">
                   {CONTACT_PHONE}
                 </a>
               </li>

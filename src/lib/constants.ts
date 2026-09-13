@@ -1,11 +1,14 @@
 export const SITE_NAME =
-  process.env.NEXT_PUBLIC_SITE_NAME ?? "[Business Name] Equipment";
+  process.env.NEXT_PUBLIC_SITE_NAME ?? "Commission Partners";
 
 export const CONTACT_PHONE =
-  process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "(555) 123-4567";
+  process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "(315) 391-2534";
+
+/** Dial-safe form of CONTACT_PHONE for `tel:` hrefs. */
+export const CONTACT_PHONE_TEL = CONTACT_PHONE.replace(/[^\d+]/g, "");
 
 export const CONTACT_EMAIL =
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "info@example.com";
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "whitemtnrep@gmail.com";
 
 export const SPEC_PRESETS: Record<string, { key: string; label: string }[]> = {
   "wire-strippers": [

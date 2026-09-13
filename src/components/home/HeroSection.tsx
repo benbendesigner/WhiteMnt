@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ArrowRightIcon, PhoneIcon, MailIcon } from "lucide-react";
-import { CONTACT_PHONE, CONTACT_EMAIL } from "@/lib/constants";
+import { CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
 
 export default function HeroSection() {
   return (
@@ -43,7 +43,7 @@ export default function HeroSection() {
             size="lg"
             variant="outline"
             className="border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
-            render={<a href={`tel:${CONTACT_PHONE}`} />}
+            render={<a href={`tel:${CONTACT_PHONE_TEL}`} />}
           >
             <PhoneIcon className="size-4" />
             {CONTACT_PHONE}

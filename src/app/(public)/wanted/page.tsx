@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
-import { SITE_NAME, CONTACT_PHONE } from "@/lib/constants";
+import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Wanted",
@@ -57,7 +57,7 @@ export default async function WantedPage() {
         </p>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" render={<Link href="/contact" />}>Get in Touch</Button>
-          <Button size="lg" variant="outline" render={<a href={`tel:${CONTACT_PHONE}`} />}>
+          <Button size="lg" variant="outline" render={<a href={`tel:${CONTACT_PHONE_TEL}`} />}>
             Call {CONTACT_PHONE}
           </Button>
         </div>
