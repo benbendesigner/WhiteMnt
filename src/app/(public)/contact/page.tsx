@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { PhoneIcon, MailIcon, CheckCircleIcon } from "lucide-react";
-import { CONTACT_PHONE, CONTACT_EMAIL, SITE_NAME } from "@/lib/constants";
+import { CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL, SITE_NAME } from "@/lib/constants";
 
 const initial: ContactState = { success: false };
 
@@ -31,7 +31,7 @@ export default function ContactPage() {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Phone</p>
-              <a href={`tel:${CONTACT_PHONE}`} className="text-sm font-medium text-foreground hover:text-primary">
+              <a href={`tel:${CONTACT_PHONE_TEL}`} className="text-sm font-medium text-foreground hover:text-primary">
                 {CONTACT_PHONE}
               </a>
             </div>

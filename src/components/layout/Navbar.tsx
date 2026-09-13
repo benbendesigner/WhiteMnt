@@ -5,7 +5,7 @@ import { useState } from "react";
 import { MenuIcon, XIcon, PhoneIcon, MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Separator } from "@/components/ui/separator";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_EMAIL } from "@/lib/constants";
+import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
 
 const navLinks = [
   { href: "/#about", label: "About" },
@@ -24,7 +24,7 @@ export default function Navbar() {
       <div className="hidden border-b border-white/10 bg-foreground px-4 sm:block sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-5 py-1.5">
           <a
-            href={`tel:${CONTACT_PHONE}`}
+            href={`tel:${CONTACT_PHONE_TEL}`}
             className="flex items-center gap-1.5 text-xs text-white/60 transition-colors hover:text-white"
           >
             <PhoneIcon className="size-3" />
@@ -76,7 +76,7 @@ export default function Navbar() {
               <MailIcon className="size-4" />
             </a>
             <a
-              href={`tel:${CONTACT_PHONE}`}
+              href={`tel:${CONTACT_PHONE_TEL}`}
               className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
               aria-label="Call us"
             >

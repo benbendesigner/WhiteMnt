@@ -18,6 +18,7 @@ const initial: ContactState = { success: false };
 
 export default function ContactCTA({ machineId, machineName, contactPhone, contactEmail }: Props) {
   const [state, action, pending] = useActionState(submitContactInquiry, initial);
+  const dialablePhone = contactPhone.replace(/[^\d+]/g, "");
 
   if (state.success) {
     return (
@@ -40,7 +41,7 @@ export default function ContactCTA({ machineId, machineName, contactPhone, conta
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <a
-          href={`tel:${contactPhone}`}
+          href={`tel:${dialablePhone}`}
           className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
         >
           <PhoneIcon className="size-4 text-primary" />
