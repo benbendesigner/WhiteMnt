@@ -27,7 +27,6 @@ export default function Footer() {
               {[
                 { href: "/inventory", label: "Inventory" },
                 { href: "/#about", label: "About Us" },
-                { href: "/#expertise", label: "Our Expertise" },
                 { href: "/contact", label: "Contact" },
               ].map((l) => (
                 <li key={l.href}>

@@ -9,7 +9,6 @@ import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/li
 
 const navLinks = [
   { href: "/#about", label: "About" },
-  { href: "/#expertise", label: "Expertise" },
   { href: "/inventory", label: "Inventory" },
   { href: "/wanted", label: "Wanted" },
   { href: "/contact", label: "Contact" },
@@ -41,7 +40,11 @@ export default function Navbar() {
       </div>
 
       {/* Main nav bar */}
-      <div className="border-b border-foreground/15 bg-background/98 backdrop-blur-sm">
+      {/* Opaque, un-blurred background on purpose: Safari has long-standing
+          rendering bugs with backdrop-filter inside a position:sticky element
+          that can blank the bar out entirely. At 98% opacity the blur was not
+          buying anything visually. */}
+      <div className="border-b border-foreground/15 bg-background">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link href="/" className="flex flex-col leading-tight">
             <span className="text-base font-black tracking-wide text-foreground">

@@ -34,7 +34,7 @@ export default function ContactCTA({ machineId, machineName, contactPhone, conta
 
   return (
     <div className="rounded-xl border border-border bg-card p-6 ring-1 ring-foreground/5">
-      <h3 className="text-lg font-semibold text-foreground">Interested in this machine?</h3>
+      <h3 className="text-lg font-semibold text-foreground">Interested in this Item?</h3>
       <p className="mt-1 text-sm text-muted-foreground">
         Send us a message and we&apos;ll get back to you quickly, or reach out directly.
       </p>

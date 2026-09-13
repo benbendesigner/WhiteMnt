@@ -1,7 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
-import ExpertiseSection from "@/components/home/ExpertiseSection";
-import LatestEquipment from "@/components/home/LatestEquipment";
+import FeaturedEquipment from "@/components/home/FeaturedEquipment";
 import ManufacturerLogos from "@/components/home/ManufacturerLogos";
 import CTABanner from "@/components/home/CTABanner";
 
@@ -11,8 +10,7 @@ export default function HomePage() {
       <HeroSection />
       <ManufacturerLogos />
       <AboutSection />
-      <ExpertiseSection />
-      <LatestEquipment />
+      <FeaturedEquipment />
       <CTABanner />
     </>
   );

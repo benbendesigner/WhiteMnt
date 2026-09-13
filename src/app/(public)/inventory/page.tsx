@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import LoadMoreGrid from "@/components/inventory/LoadMoreGrid";
+import MachineCard from "@/components/inventory/MachineCard";
 import SearchAndFilter from "@/components/inventory/SearchAndFilter";
 import MobileFilterBar from "@/components/inventory/MobileFilterBar";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
@@ -17,6 +18,17 @@ export const metadata: Metadata = {
 };
 
 const INITIAL_COUNT = 24;
+const FEATURED_COUNT = 3;
+
+/**
+ * The featured row is a curated view of the whole catalogue, so it only makes
+ * sense on the unfiltered, default-sorted page. Any search, filter, or sort
+ * change means the visitor is looking for something specific and the row is
+ * dropped.
+ */
+function isDefaultView({ q, category, manufacturer, sort }: FilterParams) {
+  return !q && !category && !manufacturer && (!sort || sort === "newest");
+}
 
 async function getInventory(params: FilterParams) {
   const { q, category, manufacturer, sort = "newest" } = params;
@@ -43,7 +55,23 @@ async function getInventory(params: FilterParams) {
 
   const machines = await prisma.machine.findMany({ where, orderBy });
 
-  return { machines, total: machines.length };
+  const featured = isDefaultView(params)
+    ? await prisma.machine.findMany({
+        where: { status: { in: ["ACTIVE", "PENDING"] }, featured: true },
+        orderBy: { dateListed: "desc" },
+        take: FEATURED_COUNT,
+      })
+    : [];
+
+  // Nothing should appear twice: whatever is in the featured row comes out of
+  // the list below it.
+  const featuredIds = new Set(featured.map((m) => m.id));
+
+  return {
+    featured,
+    machines: machines.filter((m) => !featuredIds.has(m.id)),
+    total: machines.length,
+  };
 }
 
 async function getFilterOptions() {
@@ -112,17 +140,20 @@ export default async function InventoryPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
-  const [{ machines, total }, { categories, manufacturers }, { categoryCounts, manufacturerCounts }] = await Promise.all([
+  const [{ featured, machines, total }, { categories, manufacturers }, { categoryCounts, manufacturerCounts }] = await Promise.all([
     getInventory(params),
     getFilterOptions(),
     getCounts(params),
   ]);
 
-  const machinesWithImages = machines.map((m) => ({
+  const toCardData = (m: (typeof machines)[number]) => ({
     ...m,
     price: m.price !== null ? Number(m.price) : null,
     images: Array.isArray(m.images) ? (m.images as { cloudinaryId: string; altText?: string; sortOrder?: number }[]) : [],
-  }));
+  });
+
+  const featuredWithImages = featured.map(toCardData);
+  const machinesWithImages = machines.map(toCardData);
 
   return (
     <>
@@ -131,7 +162,7 @@ export default async function InventoryPage({
           Equipment inventory
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          All machines inspected and tested in New England — shipping nationwide.
+          Based in New England — shipping nationwide.
         </p>
 
         <div className="mt-8 flex flex-col gap-8 lg:flex-row">
@@ -148,10 +179,30 @@ export default async function InventoryPage({
           </aside>
 
           <div className="flex-1 pb-24 lg:pb-0">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Latest
-            </p>
-            <LoadMoreGrid machines={machinesWithImages} initialCount={INITIAL_COUNT} />
+            {featuredWithImages.length > 0 && (
+              <section className="mb-10">
+                <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-primary">
+                  Featured
+                </p>
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {featuredWithImages.map((m) => (
+                    <MachineCard key={m.id} machine={m} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Suppress the list entirely when the featured row already
+                accounts for every visible listing, so the grid does not fall
+                through to its "no machines found" state. */}
+            {(machinesWithImages.length > 0 || featuredWithImages.length === 0) && (
+              <>
+                <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  {featuredWithImages.length > 0 ? "More equipment" : "Latest"}
+                </p>
+                <LoadMoreGrid machines={machinesWithImages} initialCount={INITIAL_COUNT} />
+              </>
+            )}
           </div>
         </div>
 

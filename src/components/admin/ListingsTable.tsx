@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { useTransition, useState, useMemo, useActionState } from "react";
-import { updateMachineStatus, deleteMachine, recordSale, type SaleFormState } from "@/actions/machines";
+import { updateMachineStatus, updateMachineFeatured, deleteMachine, recordSale, type SaleFormState } from "@/actions/machines";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import type { Machine, ListingStatus } from "@/generated/prisma/client";
-import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon } from "lucide-react";
+import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon, StarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries" | "views";
+type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries" | "views" | "featured";
 type SortDir = "asc" | "desc";
 
 interface Props {
@@ -130,6 +130,10 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
     startTransition(() => updateMachineStatus(machine.id, status));
   }
 
+  function handleFeaturedToggle(machine: Machine) {
+    startTransition(() => updateMachineFeatured(machine.id, !machine.featured));
+  }
+
   function handleDelete(id: number) {
     startTransition(() => {
       deleteMachine(id);
@@ -167,6 +171,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
         case "dateListed":   cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
         case "inquiries":    cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
         case "views":        cmp = a.views - b.views; break;
+        case "featured":     cmp = Number(a.featured) - Number(b.featured); break;
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -227,6 +232,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               <Th col="category" label="Category" />
               <Th col="price" label="Price" />
               <th className="px-4 py-3 text-left text-xs text-muted-foreground">Qty</th>
+              <Th col="featured" label="Featured" className="text-center" />
               <Th col="status" label="Status" />
               <Th col="dateListed" label="Listed" />
               <Th col="views" label="Views" className="text-center" />
@@ -248,6 +254,27 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                     {m.callForPrice ? "Contact" : m.price ? `$${Number(m.price).toLocaleString()}` : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() => handleFeaturedToggle(m)}
+                      aria-pressed={m.featured}
+                      title={m.featured ? "Remove from homepage" : "Feature on homepage"}
+                      className="rounded p-1 transition-colors hover:bg-muted"
+                    >
+                      <StarIcon
+                        className={cn(
+                          "size-4",
+                          m.featured
+                            ? "fill-primary text-primary"
+                            : "text-muted-foreground/40"
+                        )}
+                      />
+                      <span className="sr-only">
+                        {m.featured ? "Remove from homepage" : "Feature on homepage"}
+                      </span>
+                    </button>
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span className={cn("size-2 rounded-full shrink-0", STATUS_DOT[m.status])} />

@@ -56,6 +56,7 @@ export type MachineMinAggregateOutputType = {
   price: runtime.Decimal | null
   callForPrice: boolean | null
   status: $Enums.ListingStatus | null
+  featured: boolean | null
   dateListed: Date | null
   updatedAt: Date | null
   soldAt: Date | null
@@ -83,6 +84,7 @@ export type MachineMaxAggregateOutputType = {
   price: runtime.Decimal | null
   callForPrice: boolean | null
   status: $Enums.ListingStatus | null
+  featured: boolean | null
   dateListed: Date | null
   updatedAt: Date | null
   soldAt: Date | null
@@ -110,6 +112,7 @@ export type MachineCountAggregateOutputType = {
   price: number
   callForPrice: number
   status: number
+  featured: number
   specs: number
   images: number
   dateListed: number
@@ -157,6 +160,7 @@ export type MachineMinAggregateInputType = {
   price?: true
   callForPrice?: true
   status?: true
+  featured?: true
   dateListed?: true
   updatedAt?: true
   soldAt?: true
@@ -184,6 +188,7 @@ export type MachineMaxAggregateInputType = {
   price?: true
   callForPrice?: true
   status?: true
+  featured?: true
   dateListed?: true
   updatedAt?: true
   soldAt?: true
@@ -211,6 +216,7 @@ export type MachineCountAggregateInputType = {
   price?: true
   callForPrice?: true
   status?: true
+  featured?: true
   specs?: true
   images?: true
   dateListed?: true
@@ -327,6 +333,7 @@ export type MachineGroupByOutputType = {
   price: runtime.Decimal | null
   callForPrice: boolean
   status: $Enums.ListingStatus
+  featured: boolean
   specs: runtime.JsonValue | null
   images: runtime.JsonValue | null
   dateListed: Date
@@ -379,6 +386,7 @@ export type MachineWhereInput = {
   price?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusFilter<"Machine"> | $Enums.ListingStatus
+  featured?: Prisma.BoolFilter<"Machine"> | boolean
   specs?: Prisma.JsonNullableFilter<"Machine">
   images?: Prisma.JsonNullableFilter<"Machine">
   dateListed?: Prisma.DateTimeFilter<"Machine"> | Date | string
@@ -408,6 +416,7 @@ export type MachineOrderByWithRelationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   specs?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrderInput | Prisma.SortOrder
   dateListed?: Prisma.SortOrder
@@ -440,6 +449,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusFilter<"Machine"> | $Enums.ListingStatus
+  featured?: Prisma.BoolFilter<"Machine"> | boolean
   specs?: Prisma.JsonNullableFilter<"Machine">
   images?: Prisma.JsonNullableFilter<"Machine">
   dateListed?: Prisma.DateTimeFilter<"Machine"> | Date | string
@@ -469,6 +479,7 @@ export type MachineOrderByWithAggregationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   specs?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrderInput | Prisma.SortOrder
   dateListed?: Prisma.SortOrder
@@ -506,6 +517,7 @@ export type MachineScalarWhereWithAggregatesInput = {
   price?: Prisma.DecimalNullableWithAggregatesFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolWithAggregatesFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusWithAggregatesFilter<"Machine"> | $Enums.ListingStatus
+  featured?: Prisma.BoolWithAggregatesFilter<"Machine"> | boolean
   specs?: Prisma.JsonNullableWithAggregatesFilter<"Machine">
   images?: Prisma.JsonNullableWithAggregatesFilter<"Machine">
   dateListed?: Prisma.DateTimeWithAggregatesFilter<"Machine"> | Date | string
@@ -534,6 +546,7 @@ export type MachineCreateInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
+  featured?: boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Date | string
@@ -563,6 +576,7 @@ export type MachineUncheckedCreateInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
+  featured?: boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Date | string
@@ -591,6 +605,7 @@ export type MachineUpdateInput = {
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -620,6 +635,7 @@ export type MachineUncheckedUpdateInput = {
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -649,6 +665,7 @@ export type MachineCreateManyInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
+  featured?: boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Date | string
@@ -677,6 +694,7 @@ export type MachineUpdateManyMutationInput = {
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -706,6 +724,7 @@ export type MachineUncheckedUpdateManyInput = {
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   specs?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dateListed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -735,6 +754,7 @@ export type MachineCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   specs?: Prisma.SortOrder
   images?: Prisma.SortOrder
   dateListed?: Prisma.SortOrder
@@ -772,6 +792,7 @@ export type MachineMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   dateListed?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   soldAt?: Prisma.SortOrder
@@ -799,6 +820,7 @@ export type MachineMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   dateListed?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   soldAt?: Prisma.SortOrder
@@ -880,6 +902,7 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   price?: boolean
   callForPrice?: boolean
   status?: boolean
+  featured?: boolean
   specs?: boolean
   images?: boolean
   dateListed?: boolean
@@ -909,6 +932,7 @@ export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   callForPrice?: boolean
   status?: boolean
+  featured?: boolean
   specs?: boolean
   images?: boolean
   dateListed?: boolean
@@ -938,6 +962,7 @@ export type MachineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   callForPrice?: boolean
   status?: boolean
+  featured?: boolean
   specs?: boolean
   images?: boolean
   dateListed?: boolean
@@ -967,6 +992,7 @@ export type MachineSelectScalar = {
   price?: boolean
   callForPrice?: boolean
   status?: boolean
+  featured?: boolean
   specs?: boolean
   images?: boolean
   dateListed?: boolean
@@ -982,7 +1008,7 @@ export type MachineSelectScalar = {
   views?: boolean
 }
 
-export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
+export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "featured" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
 
 export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Machine"
@@ -1001,6 +1027,7 @@ export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     price: runtime.Decimal | null
     callForPrice: boolean
     status: $Enums.ListingStatus
+    featured: boolean
     specs: runtime.JsonValue | null
     images: runtime.JsonValue | null
     dateListed: Date
@@ -1450,6 +1477,7 @@ export interface MachineFieldRefs {
   readonly price: Prisma.FieldRef<"Machine", 'Decimal'>
   readonly callForPrice: Prisma.FieldRef<"Machine", 'Boolean'>
   readonly status: Prisma.FieldRef<"Machine", 'ListingStatus'>
+  readonly featured: Prisma.FieldRef<"Machine", 'Boolean'>
   readonly specs: Prisma.FieldRef<"Machine", 'Json'>
   readonly images: Prisma.FieldRef<"Machine", 'Json'>
   readonly dateListed: Prisma.FieldRef<"Machine", 'DateTime'>

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/constants";
+import { PhoneIcon, MailIcon } from "lucide-react";
+import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Wanted",
@@ -58,7 +59,12 @@ export default async function WantedPage() {
         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" render={<Link href="/contact" />}>Get in Touch</Button>
           <Button size="lg" variant="outline" render={<a href={`tel:${CONTACT_PHONE_TEL}`} />}>
-            Call {CONTACT_PHONE}
+            <PhoneIcon className="size-4" />
+            {CONTACT_PHONE}
+          </Button>
+          <Button size="lg" variant="outline" render={<a href={`mailto:${CONTACT_EMAIL}`} />}>
+            <MailIcon className="size-4" />
+            {CONTACT_EMAIL}
           </Button>
         </div>
       </div>
