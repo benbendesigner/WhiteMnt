@@ -28,6 +28,7 @@ const machineSchema = z.object({
     z.number().positive().nullable()
   ),
   callForPrice: z.preprocess((v) => v === "on" || v === "true", z.boolean()),
+  featured: z.preprocess((v) => v === "on" || v === "true", z.boolean()),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD"]),
   specs: z
     .string()
@@ -76,7 +77,10 @@ export async function createMachine(
       data: { ...data, slug, specs: specs ?? undefined, images: images ?? [] },
     });
 
-    if (data.status === "ACTIVE") revalidatePath("/inventory");
+    if (data.status === "ACTIVE") {
+      revalidatePath("/inventory");
+      revalidatePath("/");
+    }
     redirect(`/admin/machines/${machine.id}`);
   } catch (err) {
     if ((err as { digest?: string }).digest?.startsWith("NEXT_REDIRECT")) throw err;
@@ -110,6 +114,7 @@ export async function updateMachine(
 
     revalidatePath("/inventory");
     revalidatePath(`/inventory/${existing.slug}`);
+    revalidatePath("/");
 
     return { success: true, message: "Listing updated." };
   } catch (err) {
@@ -129,6 +134,19 @@ export async function updateMachineStatus(id: number, status: ListingStatus) {
 
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${machine.slug}`);
+  revalidatePath("/");
+}
+
+/** Toggle whether a listing is pinned to the homepage. */
+export async function updateMachineFeatured(id: number, featured: boolean) {
+  await requireAdmin();
+
+  await prisma.machine.update({
+    where: { id },
+    data: { featured },
+  });
+
+  revalidatePath("/");
 }
 
 const saleSchema = z.object({
@@ -175,6 +193,7 @@ export async function recordSale(
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${machine.slug}`);
   revalidatePath("/admin");
+  revalidatePath("/");
 
   return { success: true };
 }
@@ -189,4 +208,5 @@ export async function deleteMachine(id: number) {
 
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${machine.slug}`);
+  revalidatePath("/");
 }

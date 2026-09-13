@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Quality used wire processing equipment — strippers, crimpers, cutters from Komax, Schleuniger, Metzner, and more. Inspected, tested, and ready to ship.",
+    "Quality used wire processing equipment — strippers, crimpers, cutters from Komax, Schleuniger, Metzner, Carpenter, and more. Ready to ship nationwide.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

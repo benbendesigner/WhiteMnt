@@ -30,9 +30,9 @@ export default function HeroSection() {
           <span className="text-primary">Equipment</span>
         </h1>
         <p className="mt-6 max-w-xl text-base text-white/70 sm:text-lg">
-          We buy, inspect, and resell wire processing machinery — strippers, crimpers, and cutters
-          from Komax, Schleuniger, Metzner, and more. Every machine is tested before it ships.
-          Based in New England, we've shipped to shops across the country.
+          We buy and resell wire processing equipment — strippers, crimpers, and cutters from
+          Komax, Schleuniger, Metzner, Carpenter, and more. Based in New England, we&apos;ve
+          shipped to shops across the country.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button size="lg" render={<Link href="/inventory" />}>

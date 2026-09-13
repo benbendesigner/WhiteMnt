@@ -280,6 +280,22 @@ export default function MachineForm({ machine, suggestions }: Props) {
           <option value="PENDING">Pending sale — visible but marked</option>
           <option value="SOLD">Sold — hidden from listings</option>
         </NativeSelect>
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="featured"
+            name="featured"
+            defaultChecked={machine?.featured ?? false}
+            className="mt-0.5 accent-primary"
+          />
+          <label htmlFor="featured" className="text-sm text-foreground/80">
+            Feature on homepage
+            <span className="mt-0.5 block text-xs text-muted-foreground">
+              Featured listings fill the homepage carousel. The listing must also be Active or
+              Pending to appear.
+            </span>
+          </label>
+        </div>
       </section>
 
       {/* ── Contact Override ───────────────────────────────── */}

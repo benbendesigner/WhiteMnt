@@ -21,6 +21,7 @@ model Machine {
   price           Decimal?      @db.Decimal(10, 2)
   callForPrice    Boolean       @default(false)
   status          ListingStatus @default(DRAFT)
+  featured        Boolean       @default(false)
   specs           Json?
   images          Json?         // [{cloudinaryId, altText, sortOrder}]
   dateListed      DateTime      @default(now())
@@ -36,6 +37,7 @@ model Machine {
   views           Int      @default(0)
 
   @@index([status, dateListed])
+  @@index([featured, status])
 }
 
 model AdminUser {

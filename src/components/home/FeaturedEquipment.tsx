@@ -4,25 +4,43 @@ import MachineCard from "@/components/inventory/MachineCard";
 import { Button } from "@/components/ui/Button";
 import { ArrowRightIcon } from "lucide-react";
 import type { MachineImage } from "@/types";
+import type { Prisma } from "@/generated/prisma/client";
 
-async function getLatestMachines() {
-  const machines = await prisma.machine.findMany({
-    where: { status: { in: ["ACTIVE", "PENDING"] } },
+const VISIBLE: Prisma.MachineWhereInput = { status: { in: ["ACTIVE", "PENDING"] } };
+
+/**
+ * Listings picked in the admin (Featured column) drive the homepage carousel.
+ * When nothing is featured yet we fall back to the newest listings so the
+ * section never renders empty.
+ */
+async function getHomepageMachines() {
+  const featured = await prisma.machine.findMany({
+    where: { ...VISIBLE, featured: true },
     orderBy: { dateListed: "desc" },
-    take: 8,
+    take: 12,
   });
 
-  return machines.map((m) => ({
-    ...m,
-    price: m.price !== null ? Number(m.price) : null,
-    images: Array.isArray(m.images)
-      ? (m.images as MachineImage[])
-      : [],
-  }));
+  const machines =
+    featured.length > 0
+      ? featured
+      : await prisma.machine.findMany({
+          where: VISIBLE,
+          orderBy: { dateListed: "desc" },
+          take: 8,
+        });
+
+  return {
+    curated: featured.length > 0,
+    machines: machines.map((m) => ({
+      ...m,
+      price: m.price !== null ? Number(m.price) : null,
+      images: Array.isArray(m.images) ? (m.images as MachineImage[]) : [],
+    })),
+  };
 }
 
-export default async function LatestEquipment() {
-  const machines = await getLatestMachines();
+export default async function FeaturedEquipment() {
+  const { curated, machines } = await getHomepageMachines();
 
   if (machines.length === 0) return null;
 
@@ -33,10 +51,10 @@ export default async function LatestEquipment() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              Just listed
+              {curated ? "Hand picked" : "Just listed"}
             </p>
             <h2 className="mt-1 text-3xl font-black tracking-tight text-foreground">
-              Latest equipment
+              {curated ? "Featured equipment" : "Latest equipment"}
             </h2>
           </div>
           <Button variant="outline" size="sm" render={<Link href="/inventory" />}>
