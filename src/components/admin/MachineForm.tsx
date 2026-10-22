@@ -43,6 +43,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
   const [category, setCategory] = useState(machine?.category ?? "");
   const [model, setModel] = useState(machine?.model ?? "");
   const [condition, setCondition] = useState<string>(machine?.condition ?? "USED");
+  const [status, setStatus] = useState<string>(machine?.status ?? "DRAFT");
   const [description, setDescription] = useState(machine?.description ?? "");
 
   const [images, setImages] = useState<UploadedImage[]>(() => {
@@ -185,6 +186,7 @@ export default function MachineForm({ machine, suggestions }: Props) {
             name="condition"
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
+            error={state.errors?.condition?.[0]}
           >
             <option value="USED">Used</option>
             <option value="REFURBISHED">Refurbished</option>
@@ -273,7 +275,9 @@ export default function MachineForm({ machine, suggestions }: Props) {
           label="Listing status"
           id="status"
           name="status"
-          defaultValue={machine?.status ?? "DRAFT"}
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          error={state.errors?.status?.[0]}
         >
           <option value="DRAFT">Draft — not visible to public</option>
           <option value="ACTIVE">Active — live on site</option>
