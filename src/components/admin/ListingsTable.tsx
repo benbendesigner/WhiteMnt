@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import type { Machine, ListingStatus } from "@/generated/prisma/client";
-import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon, StarIcon } from "lucide-react";
+import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon, StarIcon, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SortCol = "title" | "manufacturer" | "category" | "price" | "comparablePrice" | "status" | "dateListed" | "inquiries" | "views" | "featured";
@@ -312,22 +312,23 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                     )}
                   </td>
                   <td className="px-2 py-2 text-right">
-                    <div className="flex justify-end gap-1">
+                    <div className="flex justify-end gap-0.5">
                       {m.status === "ACTIVE" && (
-                        <Button variant="ghost" size="xs" render={<Link href={`/inventory/${m.slug}`} target="_blank" />}>
-                          View
+                        <Button variant="ghost" size="icon-sm" render={<Link href={`/inventory/${m.slug}`} target="_blank" />} title="View listing">
+                          <EyeIcon className="size-3.5" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="xs" render={<Link href={`/admin/machines/${m.id}`} />}>
-                        Edit
+                      <Button variant="ghost" size="icon-sm" render={<Link href={`/admin/machines/${m.id}`} />} title="Edit">
+                        <PencilIcon className="size-3.5" />
                       </Button>
                       <Button
                         variant="ghost"
-                        size="xs"
+                        size="icon-sm"
                         className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => setConfirmDelete(m.id)}
+                        title="Delete"
                       >
-                        Delete
+                        <Trash2Icon className="size-3.5" />
                       </Button>
                     </div>
                   </td>
