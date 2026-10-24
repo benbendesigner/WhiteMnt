@@ -13,21 +13,23 @@ export default function AboutSection() {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              Who we are
+              About the owner
             </p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              New England&apos;s Wire Processing Specialists
+              Alan Sorensen
             </h2>
+            <p className="mt-1 text-sm font-medium text-muted-foreground">Owner</p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              We are two industry veterans based in New England who spent decades running wire
-              processing equipment in production environments. After years of hands-on work with
-              equipment from Komax, Schleuniger, Metzner, Artos, Carpenter, and others, we
-              started buying and reselling the equipment we know best.
+              As a hands-on owner and technician, I provide the attentive, old-fashioned service
+              that is increasingly hard to find. Before founding White Mountain Representatives,
+              I served as Sales Manager and Technical Advisor at Carpenter Mfg., where I partnered
+              with customers worldwide to solve processing challenges and develop practical solutions.
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              Unlike general machinery dealers, we specialize exclusively in wire processing.
-              We know this equipment, we know what it is worth, and we know who is looking for
-              it — whether you&apos;re down the road in New England or across the country.
+              Today, I bring that same responsive, knowledgeable, and friendly service to customers
+              throughout New England and beyond, supported by a broader range of products and
+              services. My top priority is to understand your company&apos;s needs, work as your
+              partner, and help you succeed.
             </p>
             <div className="mt-8 grid grid-cols-3 gap-4">
               {stats.map((item) => (
