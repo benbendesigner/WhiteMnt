@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/Button";
+import { DownloadIcon } from "lucide-react";
 import EditSaleDialog from "@/components/admin/EditSaleDialog";
 
 function fmt(n: number) {
@@ -66,7 +68,13 @@ export default async function SoldDashboard() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold tracking-tight text-foreground">Sold</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold tracking-tight text-foreground">Sold</h1>
+        <Button size="sm" variant="outline" render={<a href="/api/admin/export/sold" />}>
+          <DownloadIcon className="mr-1 size-4" />
+          Export CSV
+        </Button>
+      </div>
 
       <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-3">
         {stats.map((s) => (

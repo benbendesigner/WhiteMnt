@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ListingsTable from "@/components/admin/ListingsTable";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, DownloadIcon } from "lucide-react";
 
 export default async function AdminDashboard() {
   const [machines, inquiryGroups] = await Promise.all([
@@ -28,10 +28,16 @@ export default async function AdminDashboard() {
     <div>
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight text-foreground">Listings</h1>
-        <Button size="sm" render={<Link href="/admin/machines/new" />}>
-          <PlusIcon className="mr-1 size-4" />
-          New Listing
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" render={<a href="/api/admin/export/listings" />}>
+            <DownloadIcon className="mr-1 size-4" />
+            Export CSV
+          </Button>
+          <Button size="sm" render={<Link href="/admin/machines/new" />}>
+            <PlusIcon className="mr-1 size-4" />
+            New Listing
+          </Button>
+        </div>
       </div>
 
       <div className="mt-5 grid grid-cols-5 gap-3">
