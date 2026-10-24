@@ -61,7 +61,8 @@ export async function createMachine(
   try {
     await requireAdmin();
 
-    const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
+    const raw = Object.fromEntries(formData.entries());
+    const parsed = machineSchema.safeParse({ callForPrice: "off", featured: "off", ...raw });
     if (!parsed.success) {
       return { success: false, errors: parsed.error.flatten().fieldErrors };
     }
@@ -97,7 +98,8 @@ export async function updateMachine(
   try {
     await requireAdmin();
 
-    const parsed = machineSchema.safeParse(Object.fromEntries(formData.entries()));
+    const raw = Object.fromEntries(formData.entries());
+    const parsed = machineSchema.safeParse({ callForPrice: "off", featured: "off", ...raw });
     if (!parsed.success) {
       return { success: false, errors: parsed.error.flatten().fieldErrors };
     }
