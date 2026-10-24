@@ -1,9 +1,22 @@
 "use server";
 
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getResend, CONTACT_EMAIL } from "@/lib/resend";
 import { SITE_NAME } from "@/lib/constants";
+import { auth } from "@/lib/auth";
+
+async function requireAdmin() {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+}
+
+export async function deleteInquiry(id: number) {
+  await requireAdmin();
+  await prisma.contactInquiry.delete({ where: { id } });
+  revalidatePath("/admin/inquiries");
+}
 
 const schema = z.object({
   machineId: z.coerce.number().optional(),

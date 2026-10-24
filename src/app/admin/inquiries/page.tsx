@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/Badge";
+import DeleteInquiryButton from "@/components/admin/DeleteInquiryButton";
 
 export default async function InquiriesPage() {
   const inquiries = await prisma.contactInquiry.findMany({
@@ -42,9 +43,12 @@ export default async function InquiriesPage() {
                     <p className="mt-0.5 text-xs text-muted-foreground">Re: {inq.machineName}</p>
                   )}
                 </div>
-                <p className="whitespace-nowrap text-xs text-muted-foreground">
-                  {new Date(inq.createdAt).toLocaleDateString()}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="whitespace-nowrap text-xs text-muted-foreground">
+                    {new Date(inq.createdAt).toLocaleDateString()}
+                  </p>
+                  <DeleteInquiryButton id={inq.id} />
+                </div>
               </div>
               <p className="mt-2 whitespace-pre-line text-sm text-foreground/80">{inq.message}</p>
             </div>
