@@ -188,7 +188,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
   function Th({ col, label, className }: { col: SortCol; label: string; className?: string }) {
     return (
       <th
-        className={cn("cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-xs text-muted-foreground hover:text-foreground", className)}
+        className={cn("cursor-pointer select-none whitespace-nowrap px-2 py-2 text-left text-xs text-muted-foreground hover:text-foreground", className)}
         onClick={() => toggleSort(col)}
       >
         {label}<SortIcon col={col} />
@@ -225,7 +225,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
+        <table className="w-full text-xs">
           <thead className="bg-muted/50">
             <tr>
               <Th col="title" label="Title" />
@@ -233,13 +233,13 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               <Th col="category" label="Category" />
               <Th col="price" label="Price" />
               <Th col="comparablePrice" label="Comp. price" />
-              <th className="px-4 py-3 text-left text-xs text-muted-foreground">Qty</th>
+              <th className="px-2 py-2 text-left text-xs text-muted-foreground">Qty</th>
               <Th col="featured" label="Featured" className="text-center" />
               <Th col="status" label="Status" />
               <Th col="dateListed" label="Listed" />
               <Th col="views" label="Views" className="text-center" />
               <Th col="inquiries" label="Inquiries" className="text-center" />
-              <th className="px-4 py-3 text-right text-xs text-muted-foreground">Actions</th>
+              <th className="px-2 py-2 text-right text-xs text-muted-foreground">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -247,19 +247,19 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               const inquiries = inquiryMap[m.id] ?? 0;
               return (
                 <tr key={m.id} className="transition-colors hover:bg-muted/30">
-                  <td className="px-4 py-3 font-medium text-foreground">
-                    <span className="line-clamp-1 block max-w-[180px]">{m.title}</span>
+                  <td className="px-2 py-2 font-medium text-foreground">
+                    <span className="line-clamp-1 block max-w-[140px]">{m.title}</span>
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{m.manufacturer}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{m.category}</td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="px-2 py-2 text-muted-foreground">{m.manufacturer}</td>
+                  <td className="px-2 py-2 text-muted-foreground">{m.category}</td>
+                  <td className="px-2 py-2 text-muted-foreground">
                     {m.callForPrice ? "Contact" : m.price ? `$${Number(m.price).toLocaleString()}` : "—"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="px-2 py-2 text-muted-foreground">
                     {m.comparablePrice ? `$${Number(m.comparablePrice).toLocaleString()}` : "—"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-2 py-2 text-muted-foreground">{m.quantity}</td>
+                  <td className="px-2 py-2 text-center">
                     <button
                       type="button"
                       onClick={() => handleFeaturedToggle(m)}
@@ -280,7 +280,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                       </span>
                     </button>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-2">
                     <div className="flex items-center gap-2">
                       <span className={cn("size-2 rounded-full shrink-0", STATUS_DOT[m.status])} />
                       <select
@@ -294,13 +294,13 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                       </select>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                  <td className="whitespace-nowrap px-2 py-2 text-muted-foreground">
                     {new Date(m.dateListed).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-center text-muted-foreground">
+                  <td className="px-2 py-2 text-center text-muted-foreground">
                     {m.views > 0 ? m.views.toLocaleString() : "—"}
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-2 py-2 text-center">
                     {inquiries > 0 && (
                       <Link
                         href="/admin/inquiries"
@@ -311,7 +311,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                       </Link>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-2 py-2 text-right">
                     <div className="flex justify-end gap-1">
                       {m.status === "ACTIVE" && (
                         <Button variant="ghost" size="xs" render={<Link href={`/inventory/${m.slug}`} target="_blank" />}>

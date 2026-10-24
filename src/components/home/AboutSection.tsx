@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 
 const stats = [
@@ -45,8 +46,13 @@ export default function AboutSection() {
             </div>
           </div>
 
-          <div className="flex aspect-video items-center justify-center rounded-lg bg-muted text-sm text-muted-foreground ring-1 ring-border">
-            Photo of owners / shop
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl ring-1 ring-border">
+            <Image
+              src="/alan-sorensen.png"
+              alt="Alan Sorensen, owner of White Mountain Representatives"
+              fill
+              className="object-cover object-top"
+            />
           </div>
         </div>
       </div>
