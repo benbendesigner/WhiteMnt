@@ -11,7 +11,7 @@ import type { Machine, ListingStatus } from "@/generated/prisma/client";
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MessageSquareIcon, StarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type SortCol = "title" | "manufacturer" | "category" | "price" | "status" | "dateListed" | "inquiries" | "views" | "featured";
+type SortCol = "title" | "manufacturer" | "category" | "price" | "comparablePrice" | "status" | "dateListed" | "inquiries" | "views" | "featured";
 type SortDir = "asc" | "desc";
 
 interface Props {
@@ -167,6 +167,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
         case "manufacturer": cmp = a.manufacturer.localeCompare(b.manufacturer); break;
         case "category":     cmp = a.category.localeCompare(b.category); break;
         case "price":        cmp = (Number(a.price) || 0) - (Number(b.price) || 0); break;
+        case "comparablePrice": cmp = (Number(a.comparablePrice) || 0) - (Number(b.comparablePrice) || 0); break;
         case "status":       cmp = a.status.localeCompare(b.status); break;
         case "dateListed":   cmp = new Date(a.dateListed).getTime() - new Date(b.dateListed).getTime(); break;
         case "inquiries":    cmp = (inquiryMap[a.id] ?? 0) - (inquiryMap[b.id] ?? 0); break;
@@ -231,6 +232,7 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
               <Th col="manufacturer" label="Manufacturer" />
               <Th col="category" label="Category" />
               <Th col="price" label="Price" />
+              <Th col="comparablePrice" label="Comp. price" />
               <th className="px-4 py-3 text-left text-xs text-muted-foreground">Qty</th>
               <Th col="featured" label="Featured" className="text-center" />
               <Th col="status" label="Status" />
@@ -252,6 +254,9 @@ export default function ListingsTable({ machines, inquiryMap }: Props) {
                   <td className="px-4 py-3 text-muted-foreground">{m.category}</td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {m.callForPrice ? "Contact" : m.price ? `$${Number(m.price).toLocaleString()}` : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {m.comparablePrice ? `$${Number(m.comparablePrice).toLocaleString()}` : "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{m.quantity}</td>
                   <td className="px-4 py-3 text-center">
