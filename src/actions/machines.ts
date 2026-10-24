@@ -200,6 +200,46 @@ export async function recordSale(
   return { success: true };
 }
 
+const updateSaleSchema = z.object({
+  soldTo: z.string().min(1, "Buyer name is required"),
+  soldAt: z.string().min(1, "Sold date is required"),
+  salePrice: z.preprocess(
+    (v) => (v === "" || v === null ? null : Number(v)),
+    z.number().positive().nullable()
+  ),
+  soldNotes: z.string().optional(),
+});
+
+export async function updateSaleDetails(
+  id: number,
+  _prev: SaleFormState,
+  formData: FormData
+): Promise<SaleFormState> {
+  await requireAdmin();
+
+  const parsed = updateSaleSchema.safeParse(Object.fromEntries(formData.entries()));
+  if (!parsed.success) {
+    return { success: false, errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const { soldTo, soldAt, salePrice, soldNotes } = parsed.data;
+
+  const machine = await prisma.machine.update({
+    where: { id },
+    data: {
+      soldTo,
+      soldAt: new Date(soldAt),
+      salePrice,
+      soldNotes: soldNotes || null,
+    },
+  });
+
+  revalidatePath("/admin/sold");
+  revalidatePath(`/inventory/${machine.slug}`);
+
+  return { success: true };
+}
+
 export async function deleteMachine(id: number) {
   await requireAdmin();
 

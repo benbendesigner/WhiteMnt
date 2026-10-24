@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import EditSaleDialog from "@/components/admin/EditSaleDialog";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("en-US", {
@@ -93,6 +94,7 @@ export default async function SoldDashboard() {
                 <TableHead className="text-right">Asking price</TableHead>
                 <TableHead className="text-right">Sale price</TableHead>
                 <TableHead>Notes</TableHead>
+                <TableHead />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -148,6 +150,17 @@ export default async function SoldDashboard() {
 
                     <TableCell className="max-w-48 whitespace-normal text-muted-foreground">
                       {m.soldNotes || <span>—</span>}
+                    </TableCell>
+
+                    <TableCell>
+                      <EditSaleDialog
+                        id={m.id}
+                        title={m.title}
+                        soldTo={m.soldTo}
+                        soldAt={m.soldAt}
+                        salePrice={m.salePrice !== null ? String(m.salePrice) : null}
+                        soldNotes={m.soldNotes}
+                      />
                     </TableCell>
                   </TableRow>
                 );
