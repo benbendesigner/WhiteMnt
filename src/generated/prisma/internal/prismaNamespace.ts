@@ -904,6 +904,7 @@ export const MachineScalarFieldEnum = {
   quantity: 'quantity',
   description: 'description',
   price: 'price',
+  comparablePrice: 'comparablePrice',
   callForPrice: 'callForPrice',
   status: 'status',
   featured: 'featured',

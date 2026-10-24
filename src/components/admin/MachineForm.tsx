@@ -264,6 +264,17 @@ export default function MachineForm({ machine, suggestions }: Props) {
           placeholder="e.g. 8500"
           error={state.errors?.price?.[0]}
         />
+        <Input
+          label="Comparable market price (USD) — internal only, not shown on site"
+          id="comparablePrice"
+          name="comparablePrice"
+          type="number"
+          min="0"
+          step="0.01"
+          defaultValue={machine?.comparablePrice ? String(machine.comparablePrice) : ""}
+          placeholder="e.g. 12000"
+          error={state.errors?.comparablePrice?.[0]}
+        />
       </section>
 
       {/* ── Status ─────────────────────────────────────────── */}

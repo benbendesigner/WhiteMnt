@@ -27,6 +27,10 @@ const machineSchema = z.object({
     (v) => (v === "" || v === null ? null : Number(v)),
     z.number().positive().nullable()
   ),
+  comparablePrice: z.preprocess(
+    (v) => (v === "" || v === null ? null : Number(v)),
+    z.number().positive().nullable()
+  ),
   callForPrice: z.preprocess((v) => v === "on" || v === "true", z.boolean()),
   featured: z.preprocess((v) => v === "on" || v === "true", z.boolean()),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD"]),

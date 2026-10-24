@@ -85,16 +85,16 @@ export default async function SoldDashboard() {
             No sold listings yet.
           </p>
         ) : (
-          <Table>
+          <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead>Machine</TableHead>
-                <TableHead>Buyer</TableHead>
-                <TableHead>Sold date</TableHead>
-                <TableHead className="text-right">Asking price</TableHead>
-                <TableHead className="text-right">Sale price</TableHead>
+                <TableHead className="w-[28%]">Machine</TableHead>
+                <TableHead className="w-[18%]">Buyer</TableHead>
+                <TableHead className="w-[10%]">Sold date</TableHead>
+                <TableHead className="w-[11%] text-right">Asking</TableHead>
+                <TableHead className="w-[14%] text-right">Sale price</TableHead>
                 <TableHead>Notes</TableHead>
-                <TableHead />
+                <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -108,28 +108,32 @@ export default async function SoldDashboard() {
 
                 return (
                   <TableRow key={m.id}>
-                    <TableCell className="max-w-56">
+                    <TableCell className="overflow-hidden">
                       <Link
                         href={`/admin/machines/${m.id}`}
-                        className="font-medium text-foreground hover:text-primary hover:underline"
+                        className="block truncate font-medium text-foreground hover:text-primary hover:underline"
                       >
                         {m.title}
                       </Link>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="truncate text-xs text-muted-foreground">
                         {[m.manufacturer, m.model || m.category]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
                     </TableCell>
 
-                    <TableCell>{m.soldTo ?? <span className="text-muted-foreground">—</span>}</TableCell>
+                    <TableCell className="overflow-hidden">
+                      <span className="block truncate">
+                        {m.soldTo ?? <span className="text-muted-foreground">—</span>}
+                      </span>
+                    </TableCell>
 
                     <TableCell className="text-muted-foreground">
                       {fmtDate(m.soldAt)}
                     </TableCell>
 
                     <TableCell className="text-right text-muted-foreground">
-                      {askingPrice !== null ? fmt(askingPrice) : <span>—</span>}
+                      {askingPrice !== null ? fmt(askingPrice) : "—"}
                     </TableCell>
 
                     <TableCell className="text-right">
@@ -148,8 +152,8 @@ export default async function SoldDashboard() {
                       )}
                     </TableCell>
 
-                    <TableCell className="max-w-48 whitespace-normal text-muted-foreground">
-                      {m.soldNotes || <span>—</span>}
+                    <TableCell className="whitespace-normal text-muted-foreground">
+                      {m.soldNotes || "—"}
                     </TableCell>
 
                     <TableCell>

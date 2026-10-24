@@ -30,6 +30,7 @@ export type MachineAvgAggregateOutputType = {
   id: number | null
   quantity: number | null
   price: runtime.Decimal | null
+  comparablePrice: runtime.Decimal | null
   salePrice: runtime.Decimal | null
   views: number | null
 }
@@ -38,6 +39,7 @@ export type MachineSumAggregateOutputType = {
   id: number | null
   quantity: number | null
   price: runtime.Decimal | null
+  comparablePrice: runtime.Decimal | null
   salePrice: runtime.Decimal | null
   views: number | null
 }
@@ -54,6 +56,7 @@ export type MachineMinAggregateOutputType = {
   quantity: number | null
   description: string | null
   price: runtime.Decimal | null
+  comparablePrice: runtime.Decimal | null
   callForPrice: boolean | null
   status: $Enums.ListingStatus | null
   featured: boolean | null
@@ -82,6 +85,7 @@ export type MachineMaxAggregateOutputType = {
   quantity: number | null
   description: string | null
   price: runtime.Decimal | null
+  comparablePrice: runtime.Decimal | null
   callForPrice: boolean | null
   status: $Enums.ListingStatus | null
   featured: boolean | null
@@ -110,6 +114,7 @@ export type MachineCountAggregateOutputType = {
   quantity: number
   description: number
   price: number
+  comparablePrice: number
   callForPrice: number
   status: number
   featured: number
@@ -134,6 +139,7 @@ export type MachineAvgAggregateInputType = {
   id?: true
   quantity?: true
   price?: true
+  comparablePrice?: true
   salePrice?: true
   views?: true
 }
@@ -142,6 +148,7 @@ export type MachineSumAggregateInputType = {
   id?: true
   quantity?: true
   price?: true
+  comparablePrice?: true
   salePrice?: true
   views?: true
 }
@@ -158,6 +165,7 @@ export type MachineMinAggregateInputType = {
   quantity?: true
   description?: true
   price?: true
+  comparablePrice?: true
   callForPrice?: true
   status?: true
   featured?: true
@@ -186,6 +194,7 @@ export type MachineMaxAggregateInputType = {
   quantity?: true
   description?: true
   price?: true
+  comparablePrice?: true
   callForPrice?: true
   status?: true
   featured?: true
@@ -214,6 +223,7 @@ export type MachineCountAggregateInputType = {
   quantity?: true
   description?: true
   price?: true
+  comparablePrice?: true
   callForPrice?: true
   status?: true
   featured?: true
@@ -331,6 +341,7 @@ export type MachineGroupByOutputType = {
   quantity: number
   description: string
   price: runtime.Decimal | null
+  comparablePrice: runtime.Decimal | null
   callForPrice: boolean
   status: $Enums.ListingStatus
   featured: boolean
@@ -384,6 +395,7 @@ export type MachineWhereInput = {
   quantity?: Prisma.IntFilter<"Machine"> | number
   description?: Prisma.StringFilter<"Machine"> | string
   price?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusFilter<"Machine"> | $Enums.ListingStatus
   featured?: Prisma.BoolFilter<"Machine"> | boolean
@@ -414,6 +426,7 @@ export type MachineOrderByWithRelationInput = {
   quantity?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrderInput | Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -447,6 +460,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
   quantity?: Prisma.IntFilter<"Machine"> | number
   description?: Prisma.StringFilter<"Machine"> | string
   price?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.DecimalNullableFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusFilter<"Machine"> | $Enums.ListingStatus
   featured?: Prisma.BoolFilter<"Machine"> | boolean
@@ -477,6 +491,7 @@ export type MachineOrderByWithAggregationInput = {
   quantity?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrderInput | Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -515,6 +530,7 @@ export type MachineScalarWhereWithAggregatesInput = {
   quantity?: Prisma.IntWithAggregatesFilter<"Machine"> | number
   description?: Prisma.StringWithAggregatesFilter<"Machine"> | string
   price?: Prisma.DecimalNullableWithAggregatesFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.DecimalNullableWithAggregatesFilter<"Machine"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolWithAggregatesFilter<"Machine"> | boolean
   status?: Prisma.EnumListingStatusWithAggregatesFilter<"Machine"> | $Enums.ListingStatus
   featured?: Prisma.BoolWithAggregatesFilter<"Machine"> | boolean
@@ -544,6 +560,7 @@ export type MachineCreateInput = {
   quantity?: number
   description: string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
   featured?: boolean
@@ -574,6 +591,7 @@ export type MachineUncheckedCreateInput = {
   quantity?: number
   description: string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
   featured?: boolean
@@ -603,6 +621,7 @@ export type MachineUpdateInput = {
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -633,6 +652,7 @@ export type MachineUncheckedUpdateInput = {
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -663,6 +683,7 @@ export type MachineCreateManyInput = {
   quantity?: number
   description: string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: boolean
   status?: $Enums.ListingStatus
   featured?: boolean
@@ -692,6 +713,7 @@ export type MachineUpdateManyMutationInput = {
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -722,6 +744,7 @@ export type MachineUncheckedUpdateManyInput = {
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  comparablePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   callForPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -752,6 +775,7 @@ export type MachineCountOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -774,6 +798,7 @@ export type MachineAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrder
   salePrice?: Prisma.SortOrder
   views?: Prisma.SortOrder
 }
@@ -790,6 +815,7 @@ export type MachineMaxOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -818,6 +844,7 @@ export type MachineMinOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrder
   callForPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
   featured?: Prisma.SortOrder
@@ -838,6 +865,7 @@ export type MachineSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  comparablePrice?: Prisma.SortOrder
   salePrice?: Prisma.SortOrder
   views?: Prisma.SortOrder
 }
@@ -900,6 +928,7 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   quantity?: boolean
   description?: boolean
   price?: boolean
+  comparablePrice?: boolean
   callForPrice?: boolean
   status?: boolean
   featured?: boolean
@@ -930,6 +959,7 @@ export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   quantity?: boolean
   description?: boolean
   price?: boolean
+  comparablePrice?: boolean
   callForPrice?: boolean
   status?: boolean
   featured?: boolean
@@ -960,6 +990,7 @@ export type MachineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   quantity?: boolean
   description?: boolean
   price?: boolean
+  comparablePrice?: boolean
   callForPrice?: boolean
   status?: boolean
   featured?: boolean
@@ -990,6 +1021,7 @@ export type MachineSelectScalar = {
   quantity?: boolean
   description?: boolean
   price?: boolean
+  comparablePrice?: boolean
   callForPrice?: boolean
   status?: boolean
   featured?: boolean
@@ -1008,7 +1040,7 @@ export type MachineSelectScalar = {
   views?: boolean
 }
 
-export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "callForPrice" | "status" | "featured" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
+export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "manufacturer" | "category" | "model" | "serialNumber" | "condition" | "quantity" | "description" | "price" | "comparablePrice" | "callForPrice" | "status" | "featured" | "specs" | "images" | "dateListed" | "updatedAt" | "soldAt" | "soldTo" | "salePrice" | "soldNotes" | "contactEmail" | "contactPhone" | "contactNote" | "metaDescription" | "views", ExtArgs["result"]["machine"]>
 
 export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Machine"
@@ -1025,6 +1057,7 @@ export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     quantity: number
     description: string
     price: runtime.Decimal | null
+    comparablePrice: runtime.Decimal | null
     callForPrice: boolean
     status: $Enums.ListingStatus
     featured: boolean
@@ -1475,6 +1508,7 @@ export interface MachineFieldRefs {
   readonly quantity: Prisma.FieldRef<"Machine", 'Int'>
   readonly description: Prisma.FieldRef<"Machine", 'String'>
   readonly price: Prisma.FieldRef<"Machine", 'Decimal'>
+  readonly comparablePrice: Prisma.FieldRef<"Machine", 'Decimal'>
   readonly callForPrice: Prisma.FieldRef<"Machine", 'Boolean'>
   readonly status: Prisma.FieldRef<"Machine", 'ListingStatus'>
   readonly featured: Prisma.FieldRef<"Machine", 'Boolean'>
