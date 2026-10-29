@@ -30,6 +30,11 @@ const links = [
     label: "Sold",
     active: (p: string) => p.startsWith("/admin/sold"),
   },
+  {
+    href: "/admin/newsletter",
+    label: "Newsletter",
+    active: (p: string) => p.startsWith("/admin/newsletter"),
+  },
 ];
 
 export default function AdminNav() {
