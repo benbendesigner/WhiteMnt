@@ -10,7 +10,7 @@ import PriceDisplay from "@/components/inventory/PriceDisplay";
 import StatusBadge from "@/components/inventory/StatusBadge";
 import ContactCTA from "@/components/inventory/ContactCTA";
 import CopyLinkButton from "@/components/inventory/CopyLinkButton";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_EMAIL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 import { formatCondition } from "@/lib/format";
 import type { MachineImage } from "@/types";
 import Link from "next/link";
@@ -64,8 +64,6 @@ export default async function MachinePage({
 
   prisma.machine.update({ where: { slug }, data: { views: { increment: 1 } } }).catch(() => {});
 
-  const contactEmail = machine.contactEmail ?? CONTACT_EMAIL;
-  const contactPhone = machine.contactPhone ?? CONTACT_PHONE;
   const images = Array.isArray(machine.images) ? (machine.images as MachineImage[]) : [];
 
   const jsonLd = {
@@ -197,12 +195,7 @@ export default async function MachinePage({
             )}
 
             {/* Contact form */}
-            <ContactCTA
-              machineId={machine.id}
-              machineName={machine.title}
-              contactPhone={contactPhone}
-              contactEmail={contactEmail}
-            />
+            <ContactCTA machineId={machine.id} machineName={machine.title} />
           </div>
         </div>
       </div>

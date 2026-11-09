@@ -162,7 +162,7 @@ export default async function InventoryPage({
           Equipment inventory
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Based in New England — shipping nationwide.
+          Based in New England — shipping worldwide.
         </p>
 
         <div className="mt-8 flex flex-col gap-8 lg:flex-row">

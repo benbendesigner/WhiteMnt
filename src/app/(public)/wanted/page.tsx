@@ -2,13 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
-import { PhoneIcon, MailIcon, ChevronDownIcon } from "lucide-react";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Wanted",
   description: `Equipment ${SITE_NAME} is actively looking to buy.`,
 };
+
+// Case-insensitive so "ARTOS" and "Artos" merge; an empty label sorts first.
+function groupBy<T>(list: T[], getLabel: (item: T) => string) {
+  const groups = new Map<string, { label: string; items: T[] }>();
+  for (const item of list) {
+    const label = getLabel(item).trim();
+    const key = label.toLowerCase();
+    if (!groups.has(key)) groups.set(key, { label, items: [] });
+    groups.get(key)!.items.push(item);
+  }
+  return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, group]) => group);
+}
 
 export default async function WantedPage() {
   const items = await prisma.wantedItem.findMany({
@@ -16,18 +27,7 @@ export default async function WantedPage() {
     orderBy: [{ manufacturer: "asc" }, { title: "asc" }],
   });
 
-  // Group by manufacturer, normalizing case so "ARTOS" and "Artos" merge
-  const byManufacturer: Record<string, typeof items> = {};
-  const manufacturerLabel: Record<string, string> = {};
-  for (const item of items) {
-    const key = item.manufacturer.trim().toLowerCase();
-    if (!byManufacturer[key]) {
-      byManufacturer[key] = [];
-      manufacturerLabel[key] = item.manufacturer.trim();
-    }
-    byManufacturer[key].push(item);
-  }
-  const manufacturers = Object.keys(byManufacturer).sort();
+  const manufacturers = groupBy(items, (item) => item.manufacturer);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
@@ -47,37 +47,32 @@ export default async function WantedPage() {
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">No wanted listings at this time.</p>
       ) : (
-        <div className="space-y-2">
-          {manufacturers.map((manufacturer) => {
-            const group = byManufacturer[manufacturer];
-            return (
-              <details
-                key={manufacturer}
-                className="group rounded-lg border border-border bg-card"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 select-none hover:bg-muted/40">
-                  <div className="flex items-center gap-3">
-                    <h2 className="font-semibold text-foreground">{manufacturerLabel[manufacturer]}</h2>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      {group.length} {group.length === 1 ? "item" : "items"}
-                    </span>
-                  </div>
-                  <ChevronDownIcon className="size-4 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
-                </summary>
-                <div className="divide-y divide-border border-t border-border">
-                  {group.map((item) => (
-                    <div key={item.id} className="px-5 py-4">
-                      <div className="flex items-baseline justify-between gap-4">
-                        <h3 className="font-medium text-foreground">{item.title}</h3>
-                        <span className="shrink-0 text-xs text-muted-foreground">{item.category}</span>
-                      </div>
-                      <p className="mt-1 text-sm text-foreground/70">{item.description}</p>
-                    </div>
-                  ))}
+        <div className="space-y-10">
+          {manufacturers.map((manufacturer) => (
+            <section key={manufacturer.label}>
+              <h2 className="border-b border-foreground/15 pb-2 text-lg font-black tracking-tight text-foreground">
+                {manufacturer.label}
+              </h2>
+              {groupBy(manufacturer.items, (item) =>
+                /[a-z0-9]/i.test(item.category) ? item.category : ""
+              ).map((category) => (
+                <div key={category.label} className="mt-4">
+                  {category.label && (
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-primary">
+                      {category.label}
+                    </h3>
+                  )}
+                  <ul className="divide-y divide-border">
+                    {category.items.map((item) => (
+                      <li key={item.id} className="py-2.5 font-medium text-foreground">
+                        {item.title}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </details>
-            );
-          })}
+              ))}
+            </section>
+          ))}
         </div>
       )}
 
@@ -86,18 +81,10 @@ export default async function WantedPage() {
           Have something we&apos;re looking for?
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          Reach out — we respond quickly and can arrange pickup or shipping anywhere in the US.
+          Reach out — we respond quickly and can arrange pickup or shipping anywhere in the world.
         </p>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-5">
           <Button size="lg" render={<Link href="/contact" />}>Get in Touch</Button>
-          <Button size="lg" variant="outline" render={<a href={`tel:${CONTACT_PHONE_TEL}`} />}>
-            <PhoneIcon className="size-4" />
-            {CONTACT_PHONE}
-          </Button>
-          <Button size="lg" variant="outline" render={<a href={`mailto:${CONTACT_EMAIL}`} />}>
-            <MailIcon className="size-4" />
-            {CONTACT_EMAIL}
-          </Button>
         </div>
       </div>
     </div>

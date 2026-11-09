@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { MenuIcon, XIcon, PhoneIcon, MailIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Separator } from "@/components/ui/separator";
-import { SITE_NAME, CONTACT_PHONE, CONTACT_PHONE_TEL, CONTACT_EMAIL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 const navLinks = [
   { href: "/#about", label: "About" },
@@ -19,27 +19,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Contact strip */}
-      <div className="hidden border-b border-white/10 bg-foreground px-4 sm:block sm:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-5 py-1.5">
-          <a
-            href={`tel:${CONTACT_PHONE_TEL}`}
-            className="flex items-center gap-1.5 text-xs text-white/60 transition-colors hover:text-white"
-          >
-            <PhoneIcon className="size-3" />
-            {CONTACT_PHONE}
-          </a>
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="flex items-center gap-1.5 text-xs text-white/60 transition-colors hover:text-white"
-          >
-            <MailIcon className="size-3" />
-            {CONTACT_EMAIL}
-          </a>
-        </div>
-      </div>
-
-      {/* Main nav bar */}
       {/* Opaque, un-blurred background on purpose: Safari has long-standing
           rendering bugs with backdrop-filter inside a position:sticky element
           that can blank the bar out entirely. At 98% opacity the blur was not
@@ -69,22 +48,7 @@ export default function Navbar() {
             </Button>
           </div>
 
-          {/* Mobile contact + hamburger */}
-          <div className="flex items-center gap-2 md:hidden">
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-              aria-label="Email us"
-            >
-              <MailIcon className="size-4" />
-            </a>
-            <a
-              href={`tel:${CONTACT_PHONE_TEL}`}
-              className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-              aria-label="Call us"
-            >
-              <PhoneIcon className="size-4" />
-            </a>
+          <div className="flex items-center md:hidden">
             <button
               className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               onClick={() => setOpen(!open)}
